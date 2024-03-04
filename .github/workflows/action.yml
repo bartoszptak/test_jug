@@ -1,0 +1,35 @@
+name: Advanced Usage
+
+on: push
+
+jobs:
+  convert_via_pandoc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: create file list
+        id: files_list
+        run: |
+          sudo apt update && sudo apt install -y pandoc git
+          mkdir ./output/
+          git clone https://github.com/PUT-JUG/lab-wdpo.git && cd ./lab-wdpo/ && python3 compile.py && cp -rf ./public/* ../output/ && cd ../
+  deploy:
+    needs: convert_via_pandoc
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
