@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05 - Wykrywanie krawędzi</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="_static/github-markdown.css" />
+  <link rel="stylesheet" href="_static/custom.css" />
+  <link rel="icon" type="image/x-icon" href="_static/favicon.ico" />
+  <script>
+  MathJax = {
+      tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+      fontCache: 'global'
+      }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<main class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">05 - Wykrywanie krawędzi</h1>
+</header>
+<h1 id="wprowadzenie-do-przetwarzania-obrazów">Wprowadzenie do przetwarzania obrazów</h1>
+<h2 id="politechnika-poznańska-instytut-robotyki-i-inteligencji-maszynowej">Politechnika Poznańska, Instytut Robotyki i Inteligencji Maszynowej</h2>
+<p align="center">
+  <img width="180" height="180" src="_static/logo.svg">
+</p>
+
+<h2 id="ćwiczenie-laboratoryjne-5-wykrywanie-krawędzi"><strong>Ćwiczenie laboratoryjne 5: Wykrywanie krawędzi</strong></h2>
+<p><a href="/lab-wdpo">Powrót do spisu treści ćwiczeń laboratoryjnych</a></p>
+<h2 id="pochodne-cząstkowe">Pochodne cząstkowe</h2>
+<p>Obraz cyfrowy może być traktowany jako dwuwymiarowa funkcja dyskretna. Wszelkiego rodzaju krawędziom na obrazie towarzyszy zmiana wartości intensywności obrazu. Do wyliczenia pochodnych cząstkowych można wykorzystać maski Prewitta (dla zmian pionowych i poziomych) lub Sobela (dla zmian skośnych).</p>
+<ul>
+<li><p><strong>Maska Prewitta</strong></p>
+<p>Umożliwia obliczenie pochodnych w dwóch podstawowych kierunkach. $$ \mathbf{M_x} = \begin{bmatrix} 1 &amp; 0 &amp; -1 \\ 1 &amp; \underline{0} &amp; -1 \\ 1 &amp; 0 &amp; -1 \end{bmatrix}, \mathbf{M_y} = \begin{bmatrix} 1 &amp; 1 &amp; 1 \\ 0 &amp; \underline{0} &amp; 0 \\ -1 &amp; -1 &amp; -1 \end{bmatrix} $$</p>
+<p>Pochodne kierunkowe uzyskuje się poprzez splot obrazu z odpowiednią maską i podzielenie wyniku przez 3.</p></li>
+<li><p><strong>Maska Sobela</strong></p>
+<p>Podobnie jak maska Prewitta umożliwia obliczenie pochodnych w dwóch podstawowych kierunkach, jednak waga centralnego wiersza lub kolumny jest wyższa. $$ \mathbf{M_x} = \begin{bmatrix} 1 &amp; 0 &amp; -1 \\ 2 &amp; \underline{0} &amp; -2 \\ 1 &amp; 0 &amp; -1 \end{bmatrix}, \mathbf{M_y} = \begin{bmatrix} 1 &amp; 2 &amp; 1 \\ 0 &amp; \underline{0} &amp; 0 \\ -1 &amp; -2 &amp; -1 \end{bmatrix} $$</p></li>
+</ul>
+<p>Pochodne kierunkowe uzyskuje się poprzez splot obrazu z odpowiednią maską i podzielenie wyniku przez 4. Przykładowy obraz i wartości bezwzględne gradientów wyznaczone filtrem Sobela przedstawiono poniżej.</p>
+<p align="center">
+  <img src="./_05 - Wykrywanie krawędzi_readme_files/filtering_results.png" />
+</p>
+
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Napisz program umożliwiający wczytanie pliku graficznego w skali szarości, a następnie obliczenie pochodnych cząstkowych za pomocą maski Prewitta i Sobela (należy wykorzystać funkcję <code>cv2.filter2D</code>).</p>
+<blockquote>
+<p><strong>Uwaga:</strong><br />
+Wykorzystaj typ <code>np.float32</code> w celu przechowania wyników działania funkcji <code>cv2.filter2D</code>. <a href="https://docs.opencv.org/5.x/d4/d86/group__imgproc__filter.html#ga27c049795ce870216ddfb366086b5a04">Dokumentacja dla funkcji</a>.</p>
+</blockquote>
+<h2 id="moduł-i-kierunek-gradientu">Moduł i kierunek gradientu</h2>
+<p>Jednym ze sposobów śledzenia zmian jasności na obrazie jest analiza gradientu funkcji obrazowej (zarówno jego modułu jak i orientacji). Operator gradientu funkcji dwuwymiarowej można przedstawić w następujący sposób: $$ \nabla=\left[\begin{array}{c} \frac{\delta}{\delta x} \ \frac{\delta}{\delta y} \end{array}\right] $$</p>
+<p>Po zastosowaniu go do funkcji przybiera formę:</p>
+<p>$$ \nabla \mathrm{f}=\left[\begin{array}{c} \frac{\delta}{\delta x} f \ \frac{\delta}{\delta y} f \end{array}\right] $$</p>
+<p>Dla tak zdefiniowanego gradientu można (jak dla każdego wektora) określić moduł $|\nabla f|$ i orientację $\Phi(\nabla f)$. Wartość modułu daje informację o sile krawędzi, a orientacja o jej kierunku (wskazuje kąt prostopadły do krawędzi). Z faktu, że różniczkowanie jest operacją ciągłą, a obrazy są dwuwymiarową funkcją dyskretną wynika konieczność aproksymacji różniczkowania. Operacja różniczkowania jest liniowa i niezależna od przesunięcia, dlatego zazwyczaj realizuje się ją przez splot z odpowiednią maską.</p>
+<p>Moduł gradientu wyznacza się jako pierwiastek z sumy kwadratów pochodnych kierunkowych. Łączy on informację o gradientach cząstkowych w punkcie obrazu. Kierunek gradientu wyznacza kierunek spadku funkcji obrazowej w punkcie. Moduł i kierunek gradientu wyrażone są wzorami:</p>
+<p>$$ \begin{array}{c} M(x, y)=\sqrt{M_{x}(x, y)^{2}+M_{y}(x, y)^{2}} \end{array} $$</p>
+<p>$$ \begin{array}{c} \theta(x, y)=\arctan \left(\frac{M_{y}(x, y)}{M_{x}(x, y)}\right) \end{array} $$</p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Dla wyliczonych wcześniej pochodnych, oblicz i wyświetl obraz modułu gradientu.</p>
+<blockquote>
+<p><strong>Uwaga:</strong><br />
+Przed wyświetleniem należy przeskalować zakres wartości do <code>0..255</code> - w tym celu wykorzystaj funkcję <a href="https://numpy.org/doc/stable/reference/generated/numpy.amax.html">np.amax</a>. Następnie przekonwertuj obraz do <code>uint8</code> korzystając z metody <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.astype.html">astype</a>.</p>
+</blockquote>
+<h2 id="wykrywanie-krawędzi---metoda-cannyego">Wykrywanie krawędzi - metoda Canny’ego</h2>
+<p>Efekt zastosowania większości detektorów opartych o gradient jest niezadowalający. Aby wykryć krawędzie należy progować uzyskany wynik. Zbyt niski próg prowadzi do powstania wielu artefaktów, zbyt wysoki powoduje przerywanie segmentów. Problem ten jest częściowo rozwiązany przez zastosowanie detektora Canny'ego. Jego działanie można podzielić na 4 etapy:</p>
+<ul>
+<li><p>Wygładzanie - obraz wejściowy jest wygładzany za pomocą filtru Gaussowskiego.</p></li>
+<li><p>Wyznaczanie gradientu - wyznaczany jest moduł gradientu obrazu.</p></li>
+<li><p>Tłumienie wartości niemaksymalnych - wartości gradientu prostopadłe do krawędzi są tłumione. Przez "prostopadłe" rozumie się tu leżące w kierunku gradientu. W ten sposób wygaszane są wszystkie punkty, które nie leżą na grzbiecie wyznaczonego obrazu modułu gradientu.</p>
+  <p align="center">
+  <img src="./_05 - Wykrywanie krawędzi_readme_files/canny_nms.png" />
+  </p>
+</li>
+<li><p>Uciąglanie - wykrywanie krawędzi działa na zasadzie histerezy. Określane są dwa progi. Piksele o wartości modułu gradientu większej od większego progu są automatycznie traktowane jako krawędzie. Piksele o wartości modułu mniejszej od mniejszego progu są automatycznie odrzucane. Piksele wartości modułu znajdującej się pomiędzy progami są akceptowane tylko jeżeli sąsiadują z pikselem należącym do krawędzi.</p>
+<p>Dla zilustrowania przedstawiono poniżej przebieg wartości funkcji. Jeśli kolorem niebieskim oznaczymy próg wyższy, a czerwonym próg niższy, wartości oznaczone na czarno zostaną pozostawione, szare - odrzucone.</p>
+  <p align="center">
+      <img src="./_05 - Wykrywanie krawędzi_readme_files/canny_thresholding.png" />
+  </p>
+</li>
+</ul>
+<p>W praktyce kroki 1 i 2 są wykonywane równocześnie przez zastosowanie operatora Sobela.</p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Napisz program wykrywający krawędzie w obrazie metoda Canny’ego (należy wykorzystać funkcję <code>cv2.Canny</code>). Zbadaj wpływ różnych ustawień progów. Do wybierania poziomu progów wykorzystaj poznaną wcześniej fukcjonalność suwaków (trackbar).</p>
+<h2 id="wykrywanie-linii-prostych-oraz-okręgów-przy-pomocy-transformaty-hougha">Wykrywanie linii prostych oraz okręgów przy pomocy transformaty Hough’a</h2>
+<p><strong>Wykrycie prostej linii</strong> na obrazie może w znaczący sposób uprościć jego analizę. Jedną z metod stosowanych do detekcji linii prostych w obrazie jest transformata Hough’a. Zakłada ona, że przez każdy punkt obrazu przechodzi nieskończenie wiele prostych opisanych równaniem:</p>
+<p>$$ \rho=x \cos (\theta)+y \sin (\theta) $$</p>
+<p>Zilustrowano to na rysunku poniżej:</p>
+<p align="center">
+    <img src="./_05 - Wykrywanie krawędzi_readme_files/hough.png" />
+</p>
+
+<p>Każdej linii odpowiada jeden punkt w przestrzeni parametrów $\rho$, $\theta$, bo dla każdej linii mamy jedną, unikalną parę wartości tych parametrów. Linie przechodzące przez ten sam punkt są zmienne tylko ze względu na parametr $\theta$, więc wszystkie linie przechodzące przez punkt tworzą w przestrzeni parametrów sinusoidę. Można więc powiedzieć, że reprezentacją punktu w przestrzeni obrazu jest w przestrzeni parametrów sinusoida.</p>
+<p>Odwróćmy teraz sytuację. Jeśli mamy punkt w przestrzeni parametrów $\rho$, $\theta$, co jest jego reprezentacją w przestrzeni obrazu? Ustalenie każdego z parametrów $\rho$ i $\theta$ na pewną stałą wartość daje nam w dziedzinie zmiennych $x$ i $y$ równanie funkcji.</p>
+<p>Załóżmy teraz, że wyznaczyliśmy algorytmem Canny’ego krawędzie w obrazie. Dla każdego punktu krawędzi o współrzędnych x i y wyznaczamy reprezentację w przestrzeni parametrów. Każdą tak wyznaczoną reprezentację akumulujemy (nowy stan akumulatora = stary stan akumulatora + reprezentacja w przestrzeni parametrów).</p>
+<p>Przykładem wykonania transformaty dla wszystkich punktów obrazu (w przestrzeni parametrów $\rho$, $\theta$) jest wykres jak na rysunku poniżej:</p>
+<p align="center">
+    <img src="./_05 - Wykrywanie krawędzi_readme_files/hough_chart.png" />
+</p>
+
+<p>Liczba pikseli dzielących taki sam wzór prostej przedstawiona jest jako jasność w obrazie. Punkty o największej jasności to te, dla których istnieje najwięcej punktów wspierających. Dlatego właśnie obraz wyniku transformaty nazywa się akumulatorem, a metodę wyboru głosowaniem.</p>
+<p><strong>Detekcji okręgów</strong> dokonuje się w podobny sposób, co detekcji prostych. Do opisu okręgu wykorzystuje się trzy parametry $(x, y, r)$ zgodnie z równaniem:</p>
+<p>$$r^{2}=(a-x)^{2}+(b-y)^{2}$$</p>
+<p>Gdzie $a$ i $b$ to zmienne, $r$ to promień okręgu, a $x$ i $y$ to współrzędne jego środka.</p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Napisz program wykrywający w obrazie linie proste oraz okręgi (wykorzystać funkcje <code>HoughLines</code>, <code>HoughLinesP</code>, <code>HoughCircles</code>). Do testów można wykorzystać obraz <a href="https://chmura.put.poznan.pl/s/6qs8alOTP7engeZ">shapes.jpg</a>. Jako wzór wykorzystaj tutorial <a href="https://docs.opencv.org/5.x/d6/d10/tutorial_py_houghlines.html">dla linii</a> oraz <a href="https://docs.opencv.org/5.x/da/d53/tutorial_py_houghcircles.html">dla okręgów</a>.</p>
+<blockquote>
+<p><strong>Uwaga!</strong><br />
+Zwróć szczególną uwagę na to jak zwracane są położenia wykrytych linii i okręgów - przyda się to w kolejnych zadaniach.</p>
+</blockquote>
+<h2 id="zadania-do-samodzielnej-realizacji">Zadania do samodzielnej realizacji</h2>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Napisz program, który możliwie dobrze nakreśli granice statku na zdjęciu dla autonomicznie lądującej rakiety. Wykorzystaj jako wejście obraz <a href="https://chmura.put.poznan.pl/s/QgcNTELTqe6G1gU">drone_ship.jpg</a>.</p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Napisz program oznaczający automatycznie pomarańcze i jabłka dla sortowni owoców. Wykorzystaj jako wejście obraz <a href="https://chmura.put.poznan.pl/s/3jdBnO0dn3p9tKj">fruit.jpg</a>. Dla robota zbierającego wystarczy, że owoce dwóch rodzajów będą otoczone obwódkami w różnych kolorach.</p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Policz automatycznie jaka kwota znajduje się na obrazie <a href="https://chmura.put.poznan.pl/s/QEqdO0ak5pUYI9F">coins.jpg</a>. Sumę monet wyświetl w terminalu z dokładnością do 2 miejsc po przecinku, wykorzystując <a href="https://zetcode.com/python/fstring/">f-string</a>.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>06 - Konwolucyjne sieci neuronowe</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="_static/github-markdown.css" />
+  <link rel="stylesheet" href="_static/custom.css" />
+  <link rel="icon" type="image/x-icon" href="_static/favicon.ico" />
+  <script>
+  MathJax = {
+      tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+      fontCache: 'global'
+      }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<main class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">06 - Konwolucyjne sieci neuronowe</h1>
+</header>
+<h1 id="wprowadzenie-do-przetwarzania-obrazów">Wprowadzenie do przetwarzania obrazów</h1>
+<h2 id="politechnika-poznańska-instytut-robotyki-i-inteligencji-maszynowej">Politechnika Poznańska, Instytut Robotyki i Inteligencji Maszynowej</h2>
+<p align="center">
+  <img width="180" height="180" src="_static/logo.svg">
+</p>
+
+<h2 id="ćwiczenie-laboratoryjne-6-konwolucyjne-sieci-neuronowe"><strong>Ćwiczenie laboratoryjne 6: konwolucyjne sieci neuronowe</strong></h2>
+<p><a href="/lab-wdpo">Powrót do spisu treści ćwiczeń laboratoryjnych</a></p>
+<h1 id="wstęp">Wstęp</h1>
+<p>Konwolucyjne sieci neuronowe znacząco przyspieszyły rozwój algorytmów sztucznej inteligencji w zadaniach wizji komputerowej. Głębokie uczenie obejmuje obecnie takie zadania jak klasyfikacja, segmentacja, detekcja, śledzenie, zliczanie, transfer stylu, generowanie i <a href="https://paperswithcode.com/area/computer-vision">wiele innych</a>.</p>
+<p>Wiele firm chwali się publicznie swoimi algorytmami, udostępniając publiczne demo do poznania możliwości sieci:</p>
+<ul>
+<li><a href="http://nvidia-research-mingyuliu.com/gaugan">generowanie obrazka na podstawie rysowanej segmentacji</a>,</li>
+<li><a href="https://quickdraw.withgoogle.com/">sztuczna inteligencja zgadująca w kalambury</a>,</li>
+<li><a href="http://salicon.net/demo">generowanie mapy istotności na podstawie obrazu</a>,</li>
+<li><a href="https://huggingface.co/spaces/flax-community/image-captioning">sieć opisująca co widzi na obrazie</a>,</li>
+<li><a href="https://huggingface.co/spaces/akhaliq/AnimeGANv2">sieć zamieniająca obraz w animację</a>,</li>
+<li><a href="https://huggingface.co/spaces/flax-community/dalle-mini">AI generujące obraz na podstawie opisu</a>.</li>
+</ul>
+<h1 id="interaktywne-instrukcje">Interaktywne instrukcje</h1>
+<p>W tym laboratorium przygotowane zostały interaktywne instrukcje w narzędziu <a href="https://colab.research.google.com/">Google Colab</a> ze względu na potrzebę wykorzystania kart graficznych do przyspieszenia działania sieci neuronowych.</p>
+<ul>
+<li><a href="https://colab.research.google.com/drive/170RQcLvGTPozStlbpGFjabog6JV_B5I3?usp=sharing"><strong>Część A</strong></a> - wprowadzenie do konwolucyjnych sieci neuronowych,</li>
+<li><a href="https://colab.research.google.com/drive/11cxuYTmiIkxUr9hfcu-nDEfC2q421b1w?usp=sharing"><strong>Część B</strong></a> - budowa własnej architektury sieci,</li>
+<li><a href="https://colab.research.google.com/drive/1MFtNdcKXxMlvFBIwDTUX-YGiewFA6GwH?usp=sharing"><strong>Część C</strong></a> - budowa własnego klasyfikatora.</li>
+</ul>
+</main>
+</body>
+</html>

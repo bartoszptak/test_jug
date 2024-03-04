@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03 - Filtracja</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="_static/github-markdown.css" />
+  <link rel="stylesheet" href="_static/custom.css" />
+  <link rel="icon" type="image/x-icon" href="_static/favicon.ico" />
+  <script>
+  MathJax = {
+      tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+      fontCache: 'global'
+      }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<main class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">03 - Filtracja</h1>
+</header>
+<h1 id="wprowadzenie-do-przetwarzania-obrazów">Wprowadzenie do przetwarzania obrazów</h1>
+<h2 id="politechnika-poznańska-instytut-robotyki-i-inteligencji-maszynowej">Politechnika Poznańska, Instytut Robotyki i Inteligencji Maszynowej</h2>
+<p align="center">
+  <img width="180" height="180" src="_static/logo.svg">
+</p>
+
+<h2 id="ćwiczenie-laboratoryjne-3-filtracja"><strong>Ćwiczenie laboratoryjne 3: Filtracja</strong></h2>
+<p><a href="/lab-wdpo">Powrót do spisu treści ćwiczeń laboratoryjnych</a></p>
+<h2 id="ciekawostka---historia-zdjęcia-lenna">Ciekawostka - historia zdjęcia Lenna:</h2>
+<p><a href="http://en.wikipedia.org/wiki/Lenna">http://en.wikipedia.org/wiki/Lenna</a></p>
+<h2 id="filtracja-obrazów">Filtracja obrazów</h2>
+<p>W przetwarzaniu obrazów występują dwa główne rodzaje szumu:</p>
+<ul>
+<li><p>Szum detektora - wynika z dyskretnej natury stosowanych przetworników, tj. faktu, że stosowane przyrządy działają na zasadzie zliczania fotonów. Zazwyczaj przyjmuje się, że może być modelowany przez niezależny od obiektu, addytywny szum o rozkładzie normalnym z zerową wartością średnią i pewną wariancją.</p></li>
+<li><p>Szum "sól i pieprz" wynika głównie z błędów transmisji. Poszczególne piksele mają ustawianą albo wartość maksymalną ("sól") albo minimalną ("pieprz"). Zakłócona jest tylko część pikseli obrazu, pozostałe pozostają bez zmian.</p></li>
+</ul>
+<p>Operacją, która może pozwolić na usunięcie szumu z obrazu jest <strong>operacja filtracji</strong>. Filtracja jest operacją, która bierze pod uwagę otoczenie (sąsiedztwo) piksela, dla którego jest wykonywana. Wszystkie elementy w jego sąsiedztwie są przemnażane przez odpowiadające im współczynniki filtra, a suma tych wartości jest zapisywana jako zaktualizowana wartość piksela, który był filtrowany. Jest to tzw. konwolucja 2D.</p>
+<h3 id="liniowe-filtry-wygładzające---filtr-uśredniający">Liniowe filtry wygładzające - filtr uśredniający</h3>
+<p>Najprostszym sposobem usunięcia szumu, który równomiernie oscyluje pod i nad ‘prawdziwą’ wartością funkcji obrazowej jest lokalne uśrednianie po pewnym obszarze. Uśrednianie może być realizowane przy wykorzystaniu maski prostokątnej lub kołowej, np.:</p>
+<p align="center">
+  <img src="./_03 - Filtracja_readme_files/mean_filter.png" />
+</p>
+
+<p>Rezultatem splotu z takim filtrem będzie obraz o mniejszym natężeniu szumu, lecz również o mniejszej ostrości.</p>
+<h3 id="liniowe-filtry-wygładzające---filtr-gaussowski">Liniowe filtry wygładzające - filtr gaussowski</h3>
+<p>Poprawę jakości wygładzania można uzyskać poprzez zastosowanie uśredniania ważonego odległością od środka filtru. Jedną z takich metod jest filtracja wygładzającym filtrem gaussowskim. Poszczególne elementy jądra filtru o rozmiarze $2k + 1 × 2k + 1$ są określane zgodnie ze wzorem:</p>
+<p>$$ H(i, j)= \frac{1}{2 \pi \sigma ^ {2}} \exp - \Bigg( \frac{(i-k-1) ^ {2} + (j-k-1) ^ {2}}{2 \sigma ^ {2}} \Bigg) $$</p>
+<p>Rezultat filtracji zależy od wybranego $\sigma$ :</p>
+<ul>
+<li>małe odchylenie standardowe sprawi, że efekt wygładzania będzie niezauważalny - wagi oddalone od środka jądra będą niewielkie</li>
+<li>większe odchylenie sprawi, że wagi oddalone od środka przyjmą większe wartości, a rezultat będzie dążył do średniej z sąsiedztwa, w efekcie szum zostanie w dużej mierze zniwelowany, lecz obraz ulegnie rozmyciu</li>
+<li>bardzo duże odchylenie sprawi, że wiele szczegółów obrazu zostanie usuniętych razem z szumem</li>
+</ul>
+<h3 id="nieliniowe-filtry-wygładzające---filtr-medianowy">Nieliniowe filtry wygładzające - filtr medianowy</h3>
+<p>Podstawową wadą filtrów liniowych jest rozmywanie krawędzi na obrazie. Aby tego uniknąć konieczne jest zastosowanie filtrów nieliniowych. Jednym z takich filtrów jest filtr medianowy. Zastosowanie tego filtru polega na przypisaniu pikselowi wartości będącej medianą w pewnym sąsiedztwie. Filtr ten nadaje się szczególnie do usuwania niewielkich artefaktów (np. szumu "pieprz i sól").</p>
+<blockquote>
+<p><strong>Uwaga:</strong><br />
+W OpenCV powyższe operacje filtrowania zostały zaimplementowane pod nazwami <code>cv2.blur()</code>, <code>cv2.medianBlur()</code> oraz <code>cv2.GaussianBlur()</code>. Więcej informacji znajdziesz w dokumentacji: <a href="https://docs.opencv.org/5.x/d4/d13/tutorial_py_filtering.html">https://docs.opencv.org/5.x/d4/d13/tutorial_py_filtering.html</a>.</p>
+</blockquote>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<ul>
+<li><p>Pobierz dwa obrazy z wprowadzonymi zakłóceniami:</p>
+<ul>
+<li><p><a href="https://chmura.put.poznan.pl/s/witKUB1ChWPoMam">lenna_noise.bmp</a></p></li>
+<li><p><a href="https://chmura.put.poznan.pl/s/O70eou5wNuEcMKX">lenna_salt_and_pepper.bmp</a></p></li>
+</ul></li>
+<li><p>Wyświetl jeden z pobranych obrazów, a następnie korzystając z poznanych funkcji do filtracji (filtr uśredniający, filtr Gaussa, filtr medianowy) zaprezentuj ich działanie. Wyświetlić rezultat działania każdego z filtrów w osobnym oknie w celu porównania efektów filtracji.</p></li>
+<li><p>Dodaj trackbar umożliwiający sterowanie rozmiarem okna filtracji (wartość powinna być nieparzysta, wykorzystaj wzór na liczby nieparzyste <code>2n+1</code>).</p></li>
+<li><p>Wykonaj filtrację na obu obrazach z zakłóceniami. Zwróć uwagę na efekty filtracji: w zależności od naniesionego szumu oraz rozmiaru okna filtracji.</p></li>
+</ul>
+<h2 id="operacje-morfologiczne">Operacje morfologiczne</h2>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Zapoznaj się z operacjami morfologicznymi: <a href="https://docs.opencv.org/5.x/d9/d61/tutorial_py_morphological_ops.html">https://docs.opencv.org/5.x/d9/d61/tutorial_py_morphological_ops.html</a>. A następnie:</p>
+<ul>
+<li><p>Wykorzystując program z poprzednich zajęć, który wykonywał operację progowanie binarnego, wykonaj na obrazie binarnym jedną z operacji <code>cv2.erode</code> lub <code>cv2.dilate</code>. Wyświetl w osobnych oknach obraz po samej operacji progowania, a w osobnym obraz po progowaniu i operacji morfologicznej.</p></li>
+<li><p>Dodaj trackbar, który umożliwia sterowanie rozmiarem maski wykorzystywanej w operacji morfologicznej. Zaobserwuj efekt jej zmiany.</p></li>
+<li><p>Po przetestowaniu erozji i dylacji przetestuj otwarcie i domknięcie. Zastanów się, kiedy przydatna może być operacja domknięcia, a kiedy otwarcia.</p></li>
+</ul>
+<h2 id="skanowanie-obrazu">Skanowanie obrazu</h2>
+<p>OpenCV zawiera bardzo dużo gotowych, zoptymalizowanych funkcji operujących na obrazach, jednak w niektórych, stosunkowo rzadkich, przypadkach niezbędne jest operowanie bezpośrednio na obrazie i jego pikselach. Można to zrealizować korzystając z pętli <code>for</code>. Szerokość, wysokość oraz liczbę kanałów (dla obrazów kolorowych) można uzyskać wywołując własność <code>shape</code>. Następnie iterujemy po szerokości, wysokości i (ewentualnie) liczbie kanałów.</p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<ul>
+<li><p>Wczytaj dowolny obraz w skali szarości, korzystając z pętli, przeiteruj po obrazie i co trzeci piksel w wierszu zamień na biały (wartość 255).</p></li>
+<li><p>Napisz program, który wykona na powyższym obrazie operację wygładzania w oknie 3x3 w krokach:</p>
+<ul>
+<li>zsumuj wszystkie piksele z wiersza nad/pod oraz kolumny przed/po</li>
+<li>podziel sumę przez liczbę pikseli (9).</li>
+</ul>
+<p>Program powinien pominąć pierwszy/ostatni wiersz oraz pierwszą/ostatnią kolumnę.</p></li>
+<li><p>Porównaj czas wykonywania oraz jakość działania z wbudowaną funkcją <code>cv2.blur(src, (3, 3))</code>.</p></li>
+<li><p>Porównać czas wykonania oraz jakość działania z realizacją uśredniania za pomocą funkcji <a href="https://docs.opencv.org/master/d4/d86/group__imgproc__filter.html#ga27c049795ce870216ddfb366086b5a04">cv2.filter2D</a>.</p></li>
+</ul>
+<h2 id="zadania-do-samodzielnej-realizacji">Zadania do samodzielnej realizacji</h2>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>W powyższym zadaniu, piksele "na obramowaniu" obrazu zostały pominięte. Zapoznaj się z innymi sposobami przetwarzania pikseli na jego brzegach: <a href="https://docs.opencv.org/5.x/d2/de8/group__core__array.html#ga209f2f4869e304c82d07739337eae7c5">https://docs.opencv.org/5.x/d2/de8/group__core__array.html#ga209f2f4869e304c82d07739337eae7c5</a></p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Napisz funkcję implementującą filtr Kuwahary (do obliczeń dla wygody wykorzystać można funkcję <code>meanStdDev</code>).</p>
+<p><strong>Czym jest filtr Kuwahary?</strong> Jest on innym przykładem filtru zachowującego krawędzie. Może być on określony dla różnych kształtów okna, jednak najczęściej przyjmuje się okno kwadratowe o długości boku równej $2L + 1$ gdzie $L$ jest liczbą całkowitą. Okno jest dzielone na 4 części jak na rysunku:</p>
+  <p align="center">
+    <img src="./_03 - Filtracja_readme_files/kuwahara.png" />
+  </p>
+
+<p>Dla każdej części określana jest wariancja i wartość średnia. Pikselowi bazowemu (środkowemu) przypisywana jest wartość średnia z obszaru o najmniejszej wariancji.</p>
+</main>
+</body>
+</html>

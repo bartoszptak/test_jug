@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>09 - Kamera termowizyjna</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="_static/github-markdown.css" />
+  <link rel="stylesheet" href="_static/custom.css" />
+  <link rel="icon" type="image/x-icon" href="_static/favicon.ico" />
+  <script>
+  MathJax = {
+      tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+      fontCache: 'global'
+      }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<main class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">09 - Kamera termowizyjna</h1>
+</header>
+<h1 id="wprowadzenie-do-systemów-wizyjnych">Wprowadzenie do Systemów Wizyjnych</h1>
+<h2 id="politechnika-poznańska-instytut-robotyki-i-inteligencji-maszynowej">Politechnika Poznańska, Instytut Robotyki i Inteligencji Maszynowej</h2>
+<p align="center">
+  <img width="180" height="180" src="_static/logo.svg">
+</p>
+
+<h2 id="ćwiczenie-laboratoryjne-9-kamera-termowizyjna"><strong>Ćwiczenie laboratoryjne 9: kamera termowizyjna</strong></h2>
+<p><a href="/lab-wdpo">Powrót do spisu treści ćwiczeń laboratoryjnych</a></p>
+<h1 id="wstęp">Wstęp</h1>
+<p><strong>Kamery termowizyjne</strong> pozwalają na rejestrację promieniowania cieplnego, które jest emitowane przez ciała fizyczne w paśmie podczerwieni bez dodatkowego oświetlania zewnętrznym źródłem światła. Termowizja stosowana jest przykładowo w zastosowaniach związanych ze zdalnym określaniem temperatury, diagnostyką urządzeń mechanicznych lub obwodów elektrycznych, rozwiązaniach z zakresu bezpieczeństwa.</p>
+<p><strong>Promieniowanie podczerwone (IR)</strong> jest to promieniowanie elektromagnetyczne o zakresie fali od około 0.8 μm do 1000 μm. W porównaniu do światła widzialnego promieniowanie podczerwone charakteryzuje się falami o dłuższej długości. Ich zakres w porównaniu do zakresu światła widzialnego, ultrafioletowego oraz innych typów fal elektromagnetycznych został przedstawiony na poniższym rysunku:</p>
+<p align="center">
+  <img width="650" height="300" src="https://www.swiatobrazu.pl/zdjecie/artykuly/254754/fotografia-od-a-do-z-widmo.jpg">
+</p>
+
+<p>Podczas zajęć wykorzystana zostanie kamera termowizyjna <a href="https://www.flir.com/products/lepton/?model=3.5%20Lepton">FLIR Lepton 3.5</a> wraz z modułem <a href="https://groupgets.com/manufacturers/getlab/products/purethermal-2-flir-lepton-smart-i-o-module">PureThermal 2 Smart I/O Module</a> pozwalającym na użycie sensora wizyjnego jako standardowej kamery przy użyciu USB. Pozwala ona na rejestrację pasma podczerwieni o długości fal 8-14 μm, z dokładnością do 0.05°C w zakresie od -10 do 400°C. Wygląd obwodu drukowanego wraz sensorem został przedstawiony na poniższym rysunku.</p>
+<p align="center">
+  <img width="680" height="240" src="./_09 - Kamera termowizyjna_readme_files/purethermal2.png">
+</p>
+
+<p>Wykorzystywany sensor zwraca informacje w postaci 16-bitowej wartości liczbowej (0 - 65535) dla każdego piksela. Wartości temperatury wyznaczane sa przy wykorzystaniu poniższego wzoru:</p>
+<p align="center">
+  <img src="https://latex.codecogs.com/svg.latex?\Large&space;Temperature[^{\circ}C]=\frac{value}{100}-273.15" title="\Large Temperature[^{\circ}C]=\frac{value}{100}-273.15" />
+</p>
+
+<p><strong>UWAGA</strong> Ta instrukcja wymaga systemu operacyjnego Ubuntu oraz zainstalowanych dodatkowych driverów.</p>
+<h1 id="zadanie-wstępne">Zadanie wstępne</h1>
+<p>Podepnij kamerę termowizyjną do portu USB i wykorzystując poniższy kod zapoznaj się z obrazem zwracanym z kamery termowizyjnej konwertowanym do 8-bitowego formatu RGB. Sprawdź wymiary oraz zakres wartości zwracanego obrazu.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="im">import</span> cv2</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="kw">def</span> camera():</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>    <span class="co">&quot;&quot;&quot;Thermal camera 8-bit RGB capture.&quot;&quot;&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>    cap <span class="op">=</span> cv2.VideoCapture(<span class="dv">2</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>        ret, frame <span class="op">=</span> cap.read()</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>        <span class="cf">if</span> <span class="kw">not</span> ret:</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a>            <span class="bu">print</span>(<span class="st">&quot;Cannot connect to the camera.&quot;</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>            <span class="cf">break</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a>        cv2.imshow(<span class="st">&quot;Thermal RGB image&quot;</span>, frame)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a>        <span class="cf">if</span> cv2.waitKey(<span class="dv">10</span>) <span class="op">==</span> <span class="bu">ord</span>(<span class="st">&#39;q&#39;</span>):</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a>            <span class="cf">break</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true"></a>    camera()</span></code></pre></div>
+<h1 id="zadania-do-samodzielnej-realizacji">Zadania do samodzielnej realizacji</h1>
+<ol>
+<li>Korzystając z podanego poniżej kodu przygotuj aplikację wyświetlającą maksymalną, minimalną oraz średnią temperaturę zmierzoną na zarejestrowanym obrazie. W tym celu:</li>
+</ol>
+<ul>
+<li>stwórz nowy skrypt np. o nazwie <code>show_temperature.py</code> i dodaj poniższy kod</li>
+<li>uzupełnij funkcję <code>calculate_temperature()</code> zgodnie z wyżej przedstawionym wzorem</li>
+<li>korzystając z przygotowanego konwertera wyznacz maksymalną, minimalną oraz średnią temperaturę</li>
+<li>dodaj wyświetlanie powyższych wartości na obrazie korzystając z metody <a href="https://docs.opencv.org/4.5.3/d6/d6e/group__imgproc__draw.html#ga5126f47f883d730f633d74f07456c576">putText()</a> dostępnej w bibliotece OpenCV</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="im">import</span> cv2</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="kw">def</span> calculate_temperature(thermal_frame: np.ndarray) <span class="op">-&gt;</span> np.ndarray:</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>    <span class="co">&quot;&quot;&quot;Temperature calculation from camera raw output values.</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="co">    Parameters</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a><span class="co">    ----------</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a><span class="co">    thermal_frame : np.ndarray</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a><span class="co">        Camera raw thermal frame.</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a><span class="co">    Returns</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a><span class="co">    -------</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a><span class="co">    np.ndarray</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a><span class="co">        Output thermal frame converted to temperature in Celsius degrees.</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a>    <span class="co">### </span><span class="al">TODO</span><span class="co">: Complete temperature conversion </span><span class="al">###</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true"></a>    temperature <span class="op">=</span> ...</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true"></a>    <span class="cf">return</span> np.<span class="bu">round</span>(temperature, <span class="dv">1</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true"></a>    <span class="co">#####################</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true"></a><span class="kw">def</span> show_temperature():</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true"></a>    <span class="co">&quot;&quot;&quot;Show thermal image and display min, max, mean measured temperature.&quot;&quot;&quot;</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true"></a>    cap <span class="op">=</span> cv2.VideoCapture(<span class="dv">2</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true"></a>    cap.<span class="bu">set</span>(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc(<span class="st">&#39;Y&#39;</span>,<span class="st">&#39;1&#39;</span>,<span class="st">&#39;6&#39;</span>,<span class="st">&#39; &#39;</span>))</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true"></a>    cap.<span class="bu">set</span>(cv2.CAP_PROP_CONVERT_RGB, <span class="dv">0</span>)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true"></a>        ret, frame <span class="op">=</span> cap.read()</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true"></a>        frame <span class="op">=</span> frame[:<span class="dv">120</span>]</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true"></a>        <span class="cf">if</span> ret <span class="op">==</span> <span class="va">False</span>:</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true"></a>            <span class="cf">break</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true"></a>        <span class="co">### </span><span class="al">TODO</span><span class="co">: Calculate max, min and mean temperature in frame </span><span class="al">###</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true"></a>        temp_max <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true"></a>        temp_min <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true"></a>        temp_mean <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true"></a>        <span class="co">#####################</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true"></a>        norm <span class="op">=</span> (frame <span class="op">-</span> np.<span class="bu">min</span>(frame)) <span class="op">/</span> (np.<span class="bu">max</span>(frame) <span class="op">-</span> np.<span class="bu">min</span>(frame))</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true"></a>        color_frame <span class="op">=</span> cv2.cvtColor(np.uint8(norm <span class="op">*</span> <span class="fl">255.</span>), cv2.COLOR_GRAY2BGR)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true"></a>        </span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true"></a>        <span class="co">### </span><span class="al">TODO</span><span class="co">: Add temperature information to frame using cv2.putText method </span><span class="al">###</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true"></a>        <span class="co">#####################</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true"></a></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true"></a>        cv2.imshow(<span class="st">&quot;Measured temperature&quot;</span>, color_frame)</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true"></a>        k <span class="op">=</span> cv2.waitKey(<span class="dv">10</span>)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true"></a></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true"></a>        <span class="cf">if</span> k <span class="op">==</span> <span class="bu">ord</span>(<span class="st">&#39;q&#39;</span>):</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true"></a>            <span class="cf">break</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true"></a></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true"></a>    show_temperature()</span></code></pre></div>
+<p>Przykładowy rezultat został przedstawiony poniżej:</p>
+<p align="center">
+  <img width="160" height="120" src="./_09 - Kamera termowizyjna_readme_files/temperature.jpg">
+</p>
+
+<ol start="2">
+<li>Przygotuj skrypt usuwający wartości o niższej temperaturze niż ustalony próg. Dostosuj dynamicznie próg przy pomocy suwaka, a następnie zastąp tło (wartości poniżej progu) własnym zdjęciem. W tym celu:</li>
+</ol>
+<ul>
+<li>stwórz nowy skrypt np. o nazwie <code>change_background.py</code> i na początek skorzystaj z wyżej przedstawionego przykładowego kodu</li>
+<li>uzupełnij funkcję <code>calculate_temperature()</code> zgodnie z wyżej przedstawionym wzorem</li>
+<li>korzystając z przygotowanego konwertera wyznacz temperaturę dla każdego z pikseli</li>
+<li>wyzeruj wartości odczytanego obrazu poniżej ustalonego progu</li>
+<li>przygotuj suwak (<a href="https://docs.opencv.org/4.5.3/d7/dfc/group__highgui.html#gaf78d2155d30b728fc413803745b67a9b">createTrackbar()</a>) pozwalający na dynamiczną zmianę progu temperatury</li>
+<li>zastąp tło własnym zdjęciem lub np. <a href="./_09 - Kamera termowizyjna_readme_files/hawaii.jpg">hawaii.jpg</a> (<strong>Uwaga:</strong> zdjęcie musi mieć takie same wymiary co odczytywany z kamery obraz)</li>
+</ul>
+<p>Przykładowy rezultat został przedstawiony poniżej:</p>
+<p align="center">
+  <img width="160" height="120" src="./_09 - Kamera termowizyjna_readme_files/task2_resultsv2.png">
+</p>
+
+<h1 id="zadanie-dodatkowe">Zadanie dodatkowe</h1>
+<p>Przygotuj zbiór danych do klasyfikacji gestów (<code>papier</code>, <code>kamień</code>, <code>nożyce</code>, <code>pozostałe/nierozpoznane</code>) dodając własne przykłady uczące dla każdej z klas przy wykorzystaniu skryptu <a href="https://github.com/MatPiech/thermal-gesture-recognition/blob/main/gesture_capture.py"><code>gesture_capture.py</code></a>.</p>
+<p align="center">
+  <img width="160" height="120" src="./_09 - Kamera termowizyjna_readme_files/paper.jpg">
+  <img width="160" height="120" src="./_09 - Kamera termowizyjna_readme_files/rock.jpg">
+  <img width="160" height="120" src="./_09 - Kamera termowizyjna_readme_files/scissors.jpg">
+  <img width="160" height="120" src="./_09 - Kamera termowizyjna_readme_files/other.jpg">
+</p>
+
+<p>Przygotowany zbiór danych skompresuj z poziomu katalogu <code>scripts</code> do formatu ZIP przy pomocy polecenia <code>zip -r dataset.zip dataset/</code>. </br></br> Następnie korzystając z przygotowanego <a href="https://colab.research.google.com/drive/1OteCMcXc9MRv2QWR44ZIZPhTMrI5n0c3?usp=sharing">notatnika Google Colab</a> wytrenuj model klasyfikacji gestów oparty o architekturę <a href="https://arxiv.org/abs/1602.07360">SqueezeNet</a>. W tym celu skopiuj notatnik do swojego dysku, prześlij skompresowany zbiór danych i postępuj dalej według instrukcji zawartych w notatniku. </br></br> Po wytrenowaniu, pobraniu i rozpakowaniu (komenda: <code>unzip model.zip</code>) używając skryptu <a href="https://github.com/MatPiech/thermal-gesture-recognition/blob/main/gesture_recognition.py"><code>gesture_recognition.py</code></a> wczytaj model rozpoznawania gestów i przetestuj jego działanie. </br></br> Przykładowe wyniki zostały przedstawione poniżej:</p>
+<p align="center">
+  <img width="160" height="120" src="./_09 - Kamera termowizyjna_readme_files/gesture_detected_paper.jpg">
+  <img width="160" height="120" src="./_09 - Kamera termowizyjna_readme_files/gesture_detected_rock.jpg">
+  <img width="160" height="120" src="./_09 - Kamera termowizyjna_readme_files/gesture_detected_scissors.jpg">
+</p>
+</main>
+</body>
+</html>

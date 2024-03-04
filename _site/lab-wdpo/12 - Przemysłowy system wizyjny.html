@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>12 - Przemysłowy system wizyjny</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="_static/github-markdown.css" />
+  <link rel="stylesheet" href="_static/custom.css" />
+  <link rel="icon" type="image/x-icon" href="_static/favicon.ico" />
+  <script>
+  MathJax = {
+      tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+      fontCache: 'global'
+      }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<main class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">12 - Przemysłowy system wizyjny</h1>
+</header>
+<h1 id="wprowadzenie-do-systemów-wizyjnych">Wprowadzenie do Systemów Wizyjnych</h1>
+<h2 id="politechnika-poznańska-instytut-robotyki-i-inteligencji-maszynowej">Politechnika Poznańska, Instytut Robotyki i Inteligencji Maszynowej</h2>
+<p align="center">
+  <img width="180" height="180" src="_static/logo.svg">
+</p>
+
+<h2 id="ćwiczenie-laboratoryjne-12-przemysłowy-system-wizyjny"><strong>Ćwiczenie laboratoryjne 12: przemysłowy system wizyjny</strong></h2>
+<p><a href="/lab-wdpo">Powrót do spisu treści ćwiczeń laboratoryjnych</a></p>
+<h2 id="wstęp">Wstęp</h2>
+<p>Przemysłowy system wizyjny jest to układ współpracujących ze sobą urządzeń elektronicznych, którego zadaniem jest wykonywanie automatycznej analizy obrazu według zaprojektowanej aplikacji. Wykorzystywany jest on zazwyczaj w rozwiązaniach przemysłowych, fabrykach, na liniach montażowych i wytwórczych, czyli w miejscach, gdzie wymagana jest praca o wysokiej wydajności oraz powtarzalności. Sam system składa się z kamery lub układu kamer pozyskujących obraz z badanego otoczenia, ze sterownika, którego zadaniem jest pozyskanie, przetworzenie oraz analiza obrazu. Ponadto w wielu sytuacjach wykorzystywane są dodatkowo specjalne oświetlacze LED pozwalające na uzyskanie lepszej jakości informacji obrazowej.</p>
+<p>Do głównych zadań przemysłowego systemu wizyjnego należy sprawdzanie cech obiektów. Na tej podstawie wyróżnia się zadania takie jak:</p>
+<ul>
+<li>badanie wystąpienia obiektu</li>
+<li>detekcja defektów (stan powierzchni, krawędzi)</li>
+<li>sprawdzanie położenia</li>
+<li>pomiar wymiarów, kształtu, koloru</li>
+<li>zliczanie</li>
+<li>wykrywanie i odczytywanie znaków / kodów kreskowych</li>
+</ul>
+<p>Podczas zajęć wykorzystany będzie przemysłowy system wizyjny CV-X400 firmy <a href="https://www.keyence.eu/products/vision/vision-sys/">Keyence</a>.</p>
+<p align="center">
+  <img width="300" height="300" src="./_12 - Przemysłowy system wizyjny_readme_files/keyence_controller.png">
+</p>
+
+<p>W skład przemysłowego systemu wizyjnego CV-X400 wchodzą następujące komponenty:</p>
+<ul>
+<li>sterownik systemu zawierający 3-rdzeniowy procesor DSP</li>
+<li>moduł kamery</li>
+<li>rozszerzenie modułu sterownika wraz z oświetlaczem LED</li>
+<li>zasilacz podłączony do układu</li>
+<li>wyprowadzenie umożliwiające podłączenie monitora / panelu HMI do sterownika</li>
+</ul>
+<p align="center">
+  <img width="750" height="600" src="./_12 - Przemysłowy system wizyjny_readme_files/connection_schematic.png">
+</p>
+
+<h2 id="zadanie-wstępne">Zadanie wstępne</h2>
+<p>Podłączyć do sterownika przemysłowego systemu wizyjnego kamerę umieszczoną na statywie (wejście <code>CAMERA-1</code>). Podłączyć monitor do sterownika (wejście <code>MONITOR</code>) oraz oświetlacz (wejście <code>LIGHT-1</code>). Dopiero po podłączeniu wszystkich zewnętrznych urządzeń należy podpiąć zasilacz sterownika.</p>
+<p><strong>Uwaga</strong> Nie uruchamiać sterownika przemysłowego systemu wizyjnego przed podłączeniem wszystkich wykorzystywanych urządzeń zewnętrznych.</p>
+<p>Po uruchomieniu sterownika utwórz nowy projekt poprzez naciśnięcie szarego pola z napisem <code>Set &lt;numer obecnego projektu&gt; &lt;nazwa obecnego projektu&gt;</code> znajdującego się w lewym górnym narożniku (1), a następnie wybór opcji <code>Add New</code>. W oknie tworzenie projektu zmień jedynie nazwę, zastępując domyślną numerami indeksu według wzoru: <code>&lt;Student 1 nr indeksu&gt;-&lt;Student 2 nr indeksu&gt;</code>. Po zmianie nazwy utwórz nowy projekt poprzez naciśnięcie klawisza <code>Execute</code>.</p>
+<p align="center">
+  <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/okno_sterownika.png">
+</p>
+
+<p>Po stworzeniu projektu należy ustawić parametry kamery - w tym celu poprzez przycisk <code>Set Camera</code> znajdujący się w lewym górnym rogu (2) okna programu przejdź do ustawień. W oknie ustawień wybierz odpowiedni model (nazwa znajduje się na obudowie kamery) oraz <strong>ustaw czas naświetlania, inaczej czas otwarcia migawki</strong> (<code>Shutter Speed</code>)<strong>, tak, aby dostosować jasność obrazu do potrzeb aplikacji</strong>. Dodatkowo przy pomocy ustawień samej kamery dostosuj otwarcie przysłony oraz wartość ogniskowej.</p>
+<p align="center">
+  <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/ustawienia_kamery.png">
+</p>
+
+<p>Po ustawieniu parametrów kamery, zamknij okno ustawień i sprawdź działanie niebieskich przycisków <code>Run</code> znajdujących się w prawym dolnym narożniku (3).</p>
+<h2 id="zadania-do-samodzielnej-realizacji">Zadania do samodzielnej realizacji</h2>
+<ol>
+<li><p><strong>Zliczanie elementów.</strong> Kroki realizacji zadania:</p>
+<ul>
+<li>przy pomocy przycisku <code>Add Tools</code> (4) dostępnego w głównym oknie przejdź do katalogu narzędzi i wybierz kategorię <code>Count</code>, a następnie <code>Cluster</code></li>
+</ul>
+ <p align="center">
+   <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/aplikacje.png">
+ </p>
+
+<ul>
+<li>wybierz obraz referencyjny i ustaw prostokąt inspekcji tak, aby obejmował region w którym pojawią się obiekty</li>
+</ul>
+ <p align="center">
+   <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/edytuj_ROI.png">
+ </p>
+
+<ul>
+<li>w oknie znajdującym się po prawej stronie, w sekcji <code>Detection Conditions</code> ustaw <code>Detection Color</code> na <code>Black</code></li>
+<li>przy pomocy suwaków dostępnych na wykresie <code>Binary</code> zmień wartości progów i przetestuj zmiany na obrazie po lewej stronie, sprawdź również działanie automatycznego doboru progów poprzez <code>Auto Set</code></li>
+<li>poprzez przyciski <code>Image Enhance</code>, a następnie <code>+ Add</code> przetestuj oraz dodaj filtry pozwalające na usunięcie z obrazu powstałych artefaktów</li>
+<li>po dodaniu algorytmu przetestuj jego działanie wybierając odpowiednie okna podglądu z dostępnej listy (<code>Raw 1</code>, <code>Raw 2</code>, <code>Filtered</code>) (5)</li>
+</ul></li>
+</ol>
+<p align="center">
+  <img width="330" height="330" src="./_12 - Przemysłowy system wizyjny_readme_files/raw1.png">
+  <img width="330" height="330" src="./_12 - Przemysłowy system wizyjny_readme_files/raw2.png">
+  <img width="330" height="330" src="./_12 - Przemysłowy system wizyjny_readme_files/filtered.png">
+</p>
+
+<p align="center">
+  <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/z1_raw2.png">
+</p>
+
+<ol start="2">
+<li><p><strong>Identyfikacja kolorowych elementów z wykorzystaniem oświetlacza.</strong> Kroki realizacji zadania:</p>
+<ul>
+<li>przejdź do okna ustawień systemu poprzez przycisk <code>Set Camera</code> znajdujący się w lewym górnym rogu (2)</li>
+<li>wybierz zakładkę ustawień oświetlacza <code>Lightning</code>, a następnie w opcji <code>Flash</code> wybierz <code>Continuous</code></li>
+</ul>
+ <p align="center">
+   <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/z2_settings.png">
+ </p>
+
+<ul>
+<li>w ramach zadania dobierz kolor oświetlacza <code>Lightning Color</code> oraz jego wartość <code>Volume</code> tak aby rozróżnić kolorowe elementy (np. pisaki, które na powyższym i poniższych zdjęciach są przedstawione, wymieniając od lewej strony, w kolejności: <span style="color:red">czerwony</span>, <span style="color:blue">niebieski</span>, <span style="color:blue">niebieski</span>, <span style="color:green">zielony</span>, <span style="color:red">czerwony</span>)</li>
+</ul>
+ <p align="center">
+   <img width="330" height="260" src="./_12 - Przemysłowy system wizyjny_readme_files/z2_red.png">
+   <img width="330" height="260" src="./_12 - Przemysłowy system wizyjny_readme_files/z2_green.png">
+   <img width="330" height="260" src="./_12 - Przemysłowy system wizyjny_readme_files/z2_blue.png">
+ </p>
+</li>
+<li><p><strong>Dopasowywanie znacznika.</strong> Kroki realizacji zadania:</p>
+<ul>
+<li>przy pomocy przycisku <code>Add Tools</code> dostępnego w głównym oknie przejdź do katalogu narzędzi i wybierz kategorię <code>Alignment</code>, a następnie <code>Pattern Match (Profile)</code></li>
+<li>wybierz obraz referencyjny i ustaw region dopasowania znacznika tak, aby obejmował zarejestrowany obiekt</li>
+<li>ustaw maksymalny kąt rotacji obiektu (<code>Detection Conditions</code> -&gt; <code>Angle Range</code>)</li>
+<li>po dodaniu algorytmu przetestuj jego działanie wybierając odpowiednie okna podglądu z dostępnej listy (<code>Raw 1</code>, <code>Raw 2</code>, <code>Filtered</code>) oraz sprawdzając wpływ rotacji obiektu na jego wykrywanie</li>
+</ul></li>
+</ol>
+<p align="center">
+  <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/z3_1.png">
+  <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/z3_2.png">
+</p>
+
+<ol start="4">
+<li><strong>Detekcja defektów.</strong> Kroki realizacji zadania:
+<ul>
+<li>przy pomocy przycisku <code>Add Tools</code> dostępnego w głównym oknie przejdź do katalogu narzędzi i wybierz kategorię <code>Flaw Detection</code>, a następnie <code>Flaw on a Line</code></li>
+<li>wybierz obraz referencyjny i ustaw region dopasowania znacznika tak, aby obejmował zarejestrowany obiekt</li>
+<li>dostosuj ustawienia czułości metody oraz progi detekcji</li>
+<li>po dodaniu algorytmu przetestuj jego działanie wybierając odpowiednie okna podglądu z dostępnej listy (<code>Raw 1</code>, <code>Raw 2</code>, <code>Filtered</code>)</li>
+<li>ustaw próg detekcji defektu tak, aby wykrywany był jedynie większy z przedstawionych dwóch, zgodnie z poniższym przykładem</li>
+</ul></li>
+</ol>
+<p align="center">
+  <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/z4_2.png">
+  <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/z4_3.png">
+</p>
+
+<ol start="5">
+<li><strong>Odczyt kodu kreskowego.</strong> Kroki realizacji zadania:
+<ul>
+<li>przy pomocy przycisku <code>Add Tools</code> dostępnego w głównym oknie przejdź do katalogu narzędzi i wybierz kategorię <code>ID &amp; OCR/OCV</code>, a następnie <code>1D Code</code></li>
+<li>wybierz obraz referencyjny i ustaw region dopasowania znacznika tak, aby obejmował obiekt</li>
+<li>w <code>Detection Conditions</code> -&gt; <code>Code Type</code> ustaw odpowiedni typ rozpoznawanych kodów kreskowych (opis typów kodów kreskowych dostępny jest pod <a href="https://barcode-labels.com/getting-started/barcodes/types/">linkiem</a>)</li>
+<li>po dodaniu algorytmu przetestuj odczyt kodów kreskowych oraz czas wykonywania tej operacji w zależności od położenia i rotacji obiektu</li>
+</ul></li>
+</ol>
+<p align="center">
+  <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/z5_1.png">
+  <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/z5_2.png">
+</p>
+
+<ol start="6">
+<li><strong>Rozpoznawanie znaków.</strong> Kroki realizacji zadania:
+<ul>
+<li>przy pomocy przycisku <code>Add Tools</code> dostępnego w głównym oknie przejdź do katalogu narzędzi i wybierz kategorię <code>ID &amp; OCR/OCV</code>, a następnie <code>Characters</code></li>
+<li>wybierz obraz referencyjny i ustaw region dopasowania znacznika tak, aby obejmował obiekt</li>
+<li>ustaw kolor czcionki w zależności od dostępnej na powierzchni obiektu</li>
+<li>po dodaniu algorytmu przetestuj jego działanie wybierając odpowiednie okna podglądu z dostępnej listy (<code>Raw 1</code>, <code>Raw 2</code>, <code>Filtered</code>)</li>
+<li>oceń poprawność rozpoznanych znaków oraz czas działania algorytmu</li>
+</ul></li>
+</ol>
+<p align="center">
+  <img width="960" height="540" src="./_12 - Przemysłowy system wizyjny_readme_files/z6.png">
+</p>
+
+<h2 id="zadania-dodatkowe">Zadania dodatkowe</h2>
+<p>Z dostępnych aplikacji w sterowniku przemysłowego systemu wizyjnego wybierz jedną i przygotuj w oparciu o nią rozwiązanie własnego problemu.</p>
+</main>
+</body>
+</html>

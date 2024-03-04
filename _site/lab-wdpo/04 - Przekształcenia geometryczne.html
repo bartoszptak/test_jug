@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04 - Przekształcenia geometryczne</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="_static/github-markdown.css" />
+  <link rel="stylesheet" href="_static/custom.css" />
+  <link rel="icon" type="image/x-icon" href="_static/favicon.ico" />
+  <script>
+  MathJax = {
+      tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+      fontCache: 'global'
+      }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<main class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">04 - Przekształcenia geometryczne</h1>
+</header>
+<h1 id="wprowadzenie-do-przetwarzania-obrazów">Wprowadzenie do przetwarzania obrazów</h1>
+<h2 id="politechnika-poznańska-instytut-robotyki-i-inteligencji-maszynowej">Politechnika Poznańska, Instytut Robotyki i Inteligencji Maszynowej</h2>
+<p align="center">
+  <img width="180" height="180" src="_static/logo.svg">
+</p>
+
+<h2 id="ćwiczenie-laboratoryjne-4-przekształcenia-geometryczne"><strong>Ćwiczenie laboratoryjne 4: Przekształcenia geometryczne</strong></h2>
+<p><a href="/lab-wdpo">Powrót do spisu treści ćwiczeń laboratoryjnych</a></p>
+<h2 id="obsługa-myszy-i-rysowanie-figur-na-obrazie">Obsługa myszy i rysowanie figur na obrazie</h2>
+<p>W celu obsługi myszy niezbędne jest “podpięcie” funkcji jej obsługi (tzw. callbacku) do odpowiedniego okna. Jest to realizowane za pomocą funkcji <code>setMouseCallback</code> (<a href="https://docs.opencv.org/5.x/d7/dfc/group__highgui.html#ga89e7806b0a616f6f1d502bd8c183ad3e">dokumentacja</a>). Wymagany format tej funkcji wygląda następująco: <code>MouseCallback(event, x, y, flags,  userdata)</code>. Zdarzenia oraz flagi związane z obsługą myszki znajdziesz w <a href="https://docs.opencv.org/5.x/d0/d90/group__highgui__window__flags.html">https://docs.opencv.org/5.x/d0/d90/group__highgui__window__flags.html</a>.</p>
+<p>W momencie wystąpienia zdarzenia (tj. naciśnięcia jednego z przycisków myszy, lub klawisza CTRL, SHIFT lub ALT) wywołana będzie podpięta funkcja, której argumenty zostaną przez system automatycznie uzupełnione (tj. przekazana będzie aktualna położenie kursora na obrazie, a wszystkie flagi przyjmą odpowiednie wartości). Własne dane do funkcji obsługi zdarzenia można przekazać jako argument userdata.</p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Napisz program rysujący kwadrat po naciśnięciu lewego klawisza myszy oraz okrąg po naciśnięciu prawego. Wykorzystaj do tego celu funkcję <code>cv2.circle</code> oraz <code>cv2.rectangle</code> (<a href="https://docs.opencv.org/5.x/d6/d6e/group__imgproc__draw.html">dokumentacja</a>), wykorzystując do tego celu współrzędne kursora myszy i przykładowy kod dostępny w <a href="https://docs.opencv.org/5.x/db/d5b/tutorial_py_mouse_handling.html">https://docs.opencv.org/5.x/db/d5b/tutorial_py_mouse_handling.html</a>.</p>
+<blockquote>
+<p><strong>Uwaga:</strong><br />
+W systemie Ubuntu pod prawym przyciskiem myszy kryje się menu kontekstowe. Z tego powodu należy kliknąć prawy przycisk dwukrotnie lub wykorzystać środkowy przycisk myszy.</p>
+</blockquote>
+<h2 id="transformacje-geometryczne">Transformacje geometryczne</h2>
+<p>Oprócz poznanej na ostatnich zajęciach operacji skalowania w OpenCV dostępne są również inne transformacje geometryczne takie jak translacja (przesunięcie), czy rotacja (obrót).</p>
+<ul>
+<li><p><strong>Translacja</strong></p>
+<p>Translacja o wektor $t_x$, $t_y$ jest realizowana przekształceniem: $$ R=\begin{bmatrix} 0 &amp; 0 &amp; t_{x} \\ 0 &amp; 0 &amp; t_{y} \\ 0 &amp; 0 &amp; 1 \end{bmatrix} $$</p></li>
+<li><p><strong>Rotacja</strong></p>
+<p>Rotacja o kąt jest realizowana za pomocą macierzy: $$ R=\begin{bmatrix} cos(\theta) &amp; -sin(\theta) &amp; 0 \\ sin(\theta) &amp; cos(\theta) &amp; 0 \\ 0 &amp; 0 &amp; 1 \end{bmatrix} $$</p></li>
+</ul>
+<p>Oba te przekształcenia oraz skalowanie są szczególnymi przypadkami (elementami) transformacji afinicznej. Jej cechą jest zachowanie równoległości - linie równoległe pozostają równoległe również po zastosowaniu przekształcenia.</p>
+<ul>
+<li><p><strong>Transformacje afiniczne</strong></p>
+<p>Transformacja afiniczna przekształca współrzędne poszczególnych pikseli obrazu we współrzędne innego, liniowo zależnego układu współrzędnych. Transformacja zachowuje równoległość prostych, tj. punkty, które leżały na jednej prostej po przekształceniu nadal leżą na jednej prostej, a dodatkowo zachowany jest stosunek odległości (środek odcinka pozostaje środkiem danego odcinka po przekształceniu).</p>
+<p>Transformacje afiniczne realizowane są przez przemnożenie dotychczasowych współrzędnych (przedstawionych jako współrzędne jednorodne) przez macierz przekształcenia R o wymiarach 3x3: $$ \begin{bmatrix}x'\\ y'\\ 1\end{bmatrix}=R\begin{bmatrix} x\\ y\\ 1\end{bmatrix} $$</p></li>
+<li><p><strong>Transformacje perspektywiczna</strong></p>
+<p>Transformacja perspektywiczna przekształca dowolny czworokąt w jednej płaszczyźnie na czworokąt określony w innej płaszczyźnie. Transformacja ta zachowuje linie proste, lecz może zmieniać kąty między nimi. Efekty przekształceń można zaobserwować w podanych <a href="https://docs.opencv.org/5.x/da/d6e/tutorial_py_geometric_transformations.html">przykładach</a>. Transformacja realizowana jest za pomocą mnożenia przez macierz R o wymiarach 3x3:</p>
+<p>$$ \begin{bmatrix} \omega{x}'\\ \omega{y}'\\ \omega \end{bmatrix}=R\begin{bmatrix} x\\ y\\ 1 \end{bmatrix} $$</p>
+<p>gdzie macierz przekształcenia przybiera postać:</p>
+<p>$$ R=\begin{bmatrix} a &amp; b &amp; c \\ d &amp; e &amp; f \\ g &amp; h &amp; 1 \end{bmatrix} $$</p>
+<p>Macierz ta zawiera 8 niezależnych parametrów. Do ich określenia potrzebna jest znajomość współrzędnych czterech odpowiadających sobie punktów.</p></li>
+</ul>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<ul>
+<li><p>Pobierz udostępniony <a href="https://chmura.put.poznan.pl/s/SVpmItH96ZKxkhj">obraz</a>.</p></li>
+<li><p>Bazując na kodzie dla przekształcenia perspektywicznego oraz przykładzie obsługi myszki, napisz program, który:</p>
+<ul>
+<li>wczytuje udostępniony obraz drogi,</li>
+<li>umożliwia wybór czterech punktów (w ramach testów proszę klikać w kolejne narożniki jezdni),</li>
+<li>wykonuje przekształcenie perspektywiczne w celu “wyprostowania” jej.</li>
+</ul></li>
+</ul>
+<h2 id="histogramy">Histogramy</h2>
+<p>Histogram obrazuje liczebność poszczególnych wartości jasności pikseli na obrazie. W przypadku obrazu w skali szarości możliwy jest podział na maksimum 256 przedziałów (każdy o szerokości 1) lub mniejszą liczbę, w której każda grupuje pewien zbiór wartości (dla 4 przedziałów będą to wartości 0 - 63, 64 - 127, 128 - 191, 192 - 255). Przykładowy histogram (pochodzi ze <a href="http://www.cambridgeincolour.com/tutorials/histograms1.htm">strony</a>):</p>
+<p align="center">
+  <img src="./_04 - Przekształcenia geometryczne_readme_files/histogram.png" />
+</p>
+
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Zapoznaj się z histogramami w opencv <a href="https://docs.opencv.org/5.x/d1/db7/tutorial_py_histogram_begins.html">https://docs.opencv.org/5.x/d1/db7/tutorial_py_histogram_begins.html</a>, a następnie wykonaj kroki:</p>
+<ul>
+<li>Wyświetl histogram dla swojego obrazu, zarówno w skali szarości, jak i dla obrazu kolorowego.</li>
+</ul>
+<blockquote>
+<p><strong>Uwaga:</strong><br />
+Do wyznaczania histogramu użyć funkcji OpenCV - <code>cv2.calcHist</code>, natomiast do wyświetlania bibliotekę matplotlib.</p>
+</blockquote>
+<ul>
+<li>Wykonaj operację wyrównania histogramu (do fragmentu CLAHE (Contrast Limited Adaptive Histogram Equalization)) opisaną w: <a href="https://docs.opencv.org/5.x/d5/daf/tutorial_py_histogram_equalization.html">https://docs.opencv.org/5.x/d5/daf/tutorial_py_histogram_equalization.html</a>.</li>
+</ul>
+<h2 id="zadania-do-samodzielnej-realizacji">Zadania do samodzielnej realizacji</h2>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Napisz program, który umożliwia zaznaczenie dwóch punktów (będzie to lewy górny róg i prawy dolny pewnego obszaru) i wykonanie w tym fragmencie obrazu operacji progowania dla kanału G (zielonego).</p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Napisaz program, który po wskazaniu przez użytkownika czterech punktów na <a href="https://chmura.put.poznan.pl/s/TYJWRbzeSPjLSfW">obrazie docelowym</a> wklei w niego <a href="https://chmura.put.poznan.pl/s/geDYp1TwDbGudqY">drugi obraz</a> tak, aby wskazane punkty określały jego narożniki (celem jest zastąpienie jednego z obrazów wiszących w galerii sztuki obrazem mopsa).</p>
+<blockquote>
+<p><strong>Uwaga:</strong><br />
+Zadanie może wymagać <a href="https://docs.opencv.org/5.x/d0/d86/tutorial_py_image_arithmetics.html">dodawania obrazów z maską (bitwise operation)</a>.</p>
+</blockquote>
+</main>
+</body>
+</html>

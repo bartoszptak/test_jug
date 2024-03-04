@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02 - Podstawy OpenCV</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="_static/github-markdown.css" />
+  <link rel="stylesheet" href="_static/custom.css" />
+  <link rel="icon" type="image/x-icon" href="_static/favicon.ico" />
+  <script>
+  MathJax = {
+      tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+      fontCache: 'global'
+      }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<main class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">02 - Podstawy OpenCV</h1>
+</header>
+<h1 id="wprowadzenie-do-przetwarzania-obrazów">Wprowadzenie do przetwarzania obrazów</h1>
+<h2 id="politechnika-poznańska-instytut-robotyki-i-inteligencji-maszynowej">Politechnika Poznańska, Instytut Robotyki i Inteligencji Maszynowej</h2>
+<p align="center">
+  <img width="180" height="180" src="_static/logo.svg">
+</p>
+
+<h2 id="ćwiczenie-laboratoryjne-2-podstawowe-operacje-na-obrazach-i-elementy-sterujące"><strong>Ćwiczenie laboratoryjne 2: Podstawowe operacje na obrazach i elementy sterujące</strong></h2>
+<p><a href="/lab-wdpo">Powrót do spisu treści ćwiczeń laboratoryjnych</a></p>
+<h2 id="obsługa-zdarzeń-interfejsu---trackbar">Obsługa zdarzeń interfejsu - trackbar</h2>
+<p>Duża część funkcji dostępnych w OpenCV wymaga ustawienia parametrów, a ich wartość jest zależna od typu obrazów, na których wykonywane są operacje. Sposobem na ułatwienie dobrania wartości parametru jest wykorzystanie elementu graficznego interfejsu użytkownika o nazwie trackbar. Pozwala on kontrolować wartość wybranej zmiennej w programie, a tym samym na podgląd w czasie rzeczywistym efektu działania algorytmu w zależności od parametru.</p>
+<p>Więcej o trackbarach możesz sprawdzić w tutorialu: <a href="https://docs.opencv.org/5.x/da/d6a/tutorial_trackbar.html">https://docs.opencv.org/5.x/da/d6a/tutorial_trackbar.html</a>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="im">import</span> cv2</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="kw">def</span> empty_callback(value):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>    <span class="cf">pass</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="co"># create a black image, a window</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>img <span class="op">=</span> np.zeros((<span class="dv">300</span>, <span class="dv">512</span>, <span class="dv">3</span>), dtype<span class="op">=</span>np.uint8)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>cv2.namedWindow(<span class="st">&#39;image&#39;</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a><span class="co"># create trackbars for color change</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>cv2.createTrackbar(<span class="st">&#39;R&#39;</span>, <span class="st">&#39;image&#39;</span>, <span class="dv">0</span>, <span class="dv">255</span>, empty_callback)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a>cv2.createTrackbar(<span class="st">&#39;G&#39;</span>, <span class="st">&#39;image&#39;</span>, <span class="dv">0</span>, <span class="dv">255</span>, empty_callback)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a>cv2.createTrackbar(<span class="st">&#39;B&#39;</span>, <span class="st">&#39;image&#39;</span>, <span class="dv">0</span>, <span class="dv">255</span>, empty_callback)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a><span class="co"># create switch for ON/OFF functionality</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a>switch_trackbar_name <span class="op">=</span> <span class="st">&#39;0 : OFF </span><span class="ch">\n</span><span class="st">1 : ON&#39;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true"></a>cv2.createTrackbar(switch_trackbar_name, <span class="st">&#39;image&#39;</span>, <span class="dv">0</span>, <span class="dv">1</span>, empty_callback)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true"></a>    cv2.imshow(<span class="st">&#39;image&#39;</span>, img)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true"></a>    <span class="co"># sleep for 10 ms waiting for user to press some key, return -1 on timeout</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true"></a>    key_code <span class="op">=</span> cv2.waitKey(<span class="dv">10</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true"></a>    <span class="cf">if</span> key_code <span class="op">==</span> <span class="dv">27</span>:</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true"></a>        <span class="co"># escape key pressed</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true"></a>        <span class="cf">break</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true"></a>    <span class="co"># get current positions of four trackbars</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true"></a>    r <span class="op">=</span> cv2.getTrackbarPos(<span class="st">&#39;R&#39;</span>, <span class="st">&#39;image&#39;</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true"></a>    g <span class="op">=</span> cv2.getTrackbarPos(<span class="st">&#39;G&#39;</span>, <span class="st">&#39;image&#39;</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true"></a>    b <span class="op">=</span> cv2.getTrackbarPos(<span class="st">&#39;B&#39;</span>, <span class="st">&#39;image&#39;</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true"></a>    s <span class="op">=</span> cv2.getTrackbarPos(switch_trackbar_name, <span class="st">&#39;image&#39;</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true"></a>    <span class="cf">if</span> s <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true"></a>        <span class="co"># assign zeros to all pixels</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true"></a>        img[:] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true"></a>    <span class="cf">else</span>:</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true"></a>        <span class="co"># assign the same BGR color to all pixels</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true"></a>        img[:] <span class="op">=</span> [b, g, r]</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true"></a><span class="co"># closes all windows (usually optional as the script ends anyway)</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true"></a>cv2.destroyAllWindows()</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true"></a></span></code></pre></div>
+<blockquote>
+<p><strong>UWAGA</strong></p>
+<p>W przykładzie do wszystkich trackbarów podłączono tę samą funkcję empty_callback, która nie wykonuje żadnej operacji. Należy pamiętać, że funkcja ta obsługuje wywołanie zdarzenia od każdego trackbaru, w związku z czym w większości przypadków powinna być inna dla każdego elementu. Argument value, który przyjmuje, to wartość trackbaru. Prosty sposób prezentacji działania to dodanie do niej linijki:</p>
+<p><code>print(f'Trackbar reporting for duty with value: {value}')</code></p>
+</blockquote>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Uruchom przykładowy, dostępny powyżej program. Zmodyfikuj funkcję empty_callback w taki sposób, aby wyświetlała zmienną <code>value</code> w konsoli.</p>
+<h2 id="operacje-na-pikselach---progowanie">Operacje na pikselach - progowanie</h2>
+<p>W celu wykonania binaryzacji obrazu (zamiany do formatu, w którym występują tylko dwie wartości / kolory - biały / czarny) wykorzystuje się operację progowania. Zapoznać się z instrukcją: <a href="https://docs.opencv.org/5.x/d7/d4d/tutorial_py_thresholding.html">https://docs.opencv.org/5.x/d7/d4d/tutorial_py_thresholding.html</a>.</p>
+<blockquote>
+<p><strong>UWAGA</strong> Trackbar należy podłączyć do okna, które istnieje w momencie tworzenia trackbaru. W celu utworzenia okna (bez podawania obrazu do wyświetlenia) skorzystać z funkcji <code>cv2.namedWindow(‘windowName’)</code>.</p>
+</blockquote>
+<p><strong>Zadania do wykonania (w podanej kolejności!):</strong></p>
+<ul>
+<li>Wczytaj wybrany przez siebie kolorowy obraz (umieść go w folderze projektu lub podaj ścieżkę absolutną do niego), przekonwertuj go do skali szarości, a następnie wykonaj na nim operację progowania binarnego i wyświetl rezultat.</li>
+</ul>
+<blockquote>
+<p><strong>UWAGA</strong> Program z poniższych kroków powinien działać w czasie rzeczywistym, tj. zmiana jednego z suwaków powoduje zmianę wyświetlanego obrazu wynikowego i nie blokuje wyświetlania obrazu. Wykorzystaj do tego nieskończoną pętlę.</p>
+</blockquote>
+<ul>
+<li><p>Zmodyfikuj powyższy program tak, aby korzystał z poznanego wcześniej trackbaru (<code>cv2.createTrackbar</code>), a wskazywane przez niego wartości zostały użyte jako wartość progowania.</p></li>
+<li><p>Dodaj kolejny suwak, który umożliwi wybór typu progowania.</p></li>
+</ul>
+<h2 id="zmiana-rozmiaru---skalowanie-obrazów">Zmiana rozmiaru - skalowanie obrazów</h2>
+<p>Obraz jest dwuwymiarową funkcją dyskretną. Po zastosowaniu powyższych przekształceń część pikseli jest przekształcana w niecałkowite współrzędne, a część pikseli nowego obrazu nie ma określonej wartości. Aby ją wyznaczyć konieczne jest zastosowanie interpolacji. Istnieje wiele metoda, z których omówione zostaną tylko najpopularniejsze.</p>
+<ul>
+<li><p><strong>Najbliższy sąsiad (nearest neighbor)</strong></p>
+<p>Jest to najszybsza metoda interpolacji - pikselowi przypisywana jest wartość najbliższego znanego piksela.</p></li>
+<li><p><strong>Biliniowa (bilinear)</strong></p>
+<p>Jest to metoda dająca lepsze rezultaty, lecz wymagająca więcej obliczeń. Piksel wypełniany jest średnią ważoną wartości czterech najbliższych pikseli. Wagi zależą od odległości poszczególnych pikseli od analizowanego punktu.</p></li>
+<li><p><strong>Obszarowa (area)</strong></p>
+<p>Jest to metoda szczególnie przydatna przy zmniejszaniu obrazu. Analizowany piksel ma przypisywaną wartość średniej ważonej oryginalnych pikseli, na których się znajduje. Wagi zależą od pola fragmentów analizowanego piskela wspólnego z oryginalnymi pikselami. W przypadku powiększania obrazu metoda działa analogicznie do metody najbliższego sąsiada.</p></li>
+<li><p><strong>Bikubiczna (bicubic)</strong></p>
+<p>Zbliżona do metody biliniowej, bierze pod uwagę sąsiedztwo 4x4 pikseli, w efekcie zwracając średnią ważoną odległościami 16 najbliższych pikseli.</p></li>
+</ul>
+<p>Duże obrazy często są trudne do wyświetlenia i przeanalizowania wykonanych operacji, a dodatkowo czas ich przetwarzania jest długi (obraz o rozmiarze 12 megapixeli, np. 4000 x 3000, zapisany bez kompresji w formacie RGB to około 36 MB!). Zapoznać się z funkcją <code>cv2.resize</code>: <a href="https://docs.opencv.org/5.x/da/d54/group__imgproc__transform.html#ga47a974309e9102f5f08231edc7e7529d">https://docs.opencv.org/5.x/da/d54/group__imgproc__transform.html#ga47a974309e9102f5f08231edc7e7529d</a>.</p>
+<blockquote>
+<p><strong>UWAGA</strong></p>
+<p>Zwrócić uwagę na wykluczające się argumenty funkcji <code>dsize</code> oraz <code>fx</code>,<code>fy</code>. W języku Python argumenty opcjonalne podaje się podając ich nazwy.</p>
+<p>Wywołanie funkcji skalującej do konkretnej rozdzielczości (parametr <code>dsize</code>), powinno wyglądać następująco:<br />
+<code>img_scaled = cv2.resize(img_to_scale, dsize=(500, 500))</code></p>
+<p>Natomiast w przypadku argumentów <code>fx</code> oraz <code>fy</code>, które pozwalają skalować proporcjonalnie, parametr <code>dsize</code>, który jest wymagany podajemy jako wartość <code>(0, 0)</code> lub <code>None</code>:<br />
+<code>Img_scaled = cv2.resize(img_to_scale, (0, 0), fx=0.5, fy=0.5)</code></p>
+</blockquote>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<ul>
+<li>Pobierz obraz <a href="https://chmura.put.poznan.pl/s/PHwitdyY5c7473W">sześcianu</a>. Wczytaj go i przeskaluj go "w górę", zwiększając jego rozdzielczość 2.75x. <strong>Nie korzystając</strong> z trackbara, wypróbuj różne metodami interpolacji (<code>cv2.INTER_LINEAR</code>, <code>cv2.INTER_NEAREST</code>, <code>cv2.INTER_AREA</code>, <code>cv2.INTER_LANCZOS4</code>) i wyświetl je w osobnych oknach. Zwróć uwagę na różnice w jakości obrazu.</li>
+</ul>
+<h2 id="obrazy-jako-macierze---operacje-matematyczne">Obrazy jako macierze - operacje matematyczne</h2>
+<p>Wszystkie wczytane obrazy przechowywane są jako tablice, na których możliwe jest wykonywanie operacji matematycznych na zasadzie element-wise (tj. odpowiedni piksel z odpowiadającym mu innym). Zapoznaj się z: <a href="https://docs.opencv.org/5.x/d0/d86/tutorial_py_image_arithmetics.html">https://docs.opencv.org/5.x/d0/d86/tutorial_py_image_arithmetics.html</a>.</p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<ul>
+<li>Wykonaj operację mieszania dwóch obrazów (blending). Wykorzystaj wybrany przez siebie obraz oraz <a href="https://chmura.put.poznan.pl/s/Ba5HLCSMFNs00Zw">logo Laboratorium Systemów Wizyjnych</a>. Skorzystaj z trackbaru do określenia wartości parametrów <code>alpha</code> oraz <code>beta</code>. Sprawdź, co oznacza saturated operation.</li>
+</ul>
+<blockquote>
+<p><strong>UWAGA</strong> Zwróć uwagę, że rozmiary obrazów muszą być takie same, aby można było je dodawać. W przypadku, gdy obrazy mają różne rozmiary, należy je skalować lub przyciąć.</p>
+</blockquote>
+<h2 id="zadania-do-samodzielnej-realizacji">Zadania do samodzielnej realizacji</h2>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Wykonywanie wielu operacji na tak dużych macierzach jak obrazy może być czasochłonne. W celu wyznaczenia czasu trwania fragmentu programu można skorzystać z dedykowanych do tego funkcji. Zapoznać się z: <a href="https://docs.python.org/3/library/time.html#time.perf_counter">https://docs.python.org/3/library/time.html#time.perf_counter</a> oraz zbadaj, jak zmienia się czas skalowania obrazu w zależności od użytej interpolacji.</p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Zapoznaj się z adaptacyjnym progowaniem (sekcja Adaptive thresholdng): <a href="https://docs.opencv.org/5.x/d7/d4d/tutorial_py_thresholding.html">https://docs.opencv.org/5.x/d7/d4d/tutorial_py_thresholding.html</a>.</p>
+<p><span class="emoji" data-emoji="boom">💥</span> <strong>Zadanie do wykonania</strong> <span class="emoji" data-emoji="boom">💥</span></p>
+<p>Bazując na: <a href="https://docs.opencv.org/5.x/d0/d86/tutorial_py_image_arithmetics.html">https://docs.opencv.org/5.x/d0/d86/tutorial_py_image_arithmetics.html</a>, napisz funkcję wyznaczającą negatyw obrazu.</p>
+</main>
+</body>
+</html>

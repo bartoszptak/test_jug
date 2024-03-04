@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>10 - Kamera głębi</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="_static/github-markdown.css" />
+  <link rel="stylesheet" href="_static/custom.css" />
+  <link rel="icon" type="image/x-icon" href="_static/favicon.ico" />
+  <script>
+  MathJax = {
+      tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+      fontCache: 'global'
+      }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<main class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">10 - Kamera głębi</h1>
+</header>
+<h1 id="wprowadzenie-do-przetwarzania-obrazów">Wprowadzenie do przetwarzania obrazów</h1>
+<h2 id="politechnika-poznańska-instytut-robotyki-i-inteligencji-maszynowej">Politechnika Poznańska, Instytut Robotyki i Inteligencji Maszynowej</h2>
+<p align="center">
+  <img width="180" height="180" src="_static/logo.svg">
+</p>
+
+<h2 id="ćwiczenie-laboratoryjne-10-kamera-głębi-rgb-d"><strong>Ćwiczenie laboratoryjne 10: kamera głębi (RGB-D)</strong></h2>
+<p><a href="/lab-wdpo">Powrót do spisu treści ćwiczeń laboratoryjnych</a></p>
+<h2 id="wstęp">Wstęp</h2>
+<p>Kamery głębi (RGB-D) pozwalają uzyskać informację o rzeczywistej odległości obiektów od sensora oraz połączyć tę informację z obrazem RGB wskazując odpowiadające piksele. Kamery te znajdują zastosowanie głównie w warunkach wewnątrz pomieszczeń: w robotyce (<a href="https://www.youtube.com/watch?v=LBMsWJJxLXQ">film</a>) oraz w rozszerzonej rzeczywistości (<a href="https://www.youtube.com/watch?v=9RtvSMn4l4E">film</a>).</p>
+<p>Obraz RGB-D można uzyskać na 3 główne sposoby:</p>
+<ul>
+<li>wykorzystać kamerę stereowizyjną, w których odległość jest zwykle szacowana na podstawie przesunięcia obiektu między dwoma, skaliborwanymi kamerami;</li>
+<li>wykorzystać światło strukturalne - generalnie używa się sensora podczerwieni, który projektuje znany wzór oraz czujnik w kamerze;</li>
+<li>wykorzystać sensor Time Of Flight (ToF) znany również jako LIDAR - wysyła on impuls światła o znanej długości fali oraz mierzy czas potrzebny na uzyskanie odpowiedzi.</li>
+</ul>
+<p align="center">
+  <img width="380" height="200" src="./_10 - Kamera głębi_readme_files/d435.jpg">
+</p>
+
+<p>Podczas zajęć wykorzystamy kamerę <a href="https://www.intelrealsense.com/depth-camera-d435/">Intel® RealSense™ D435</a>, która wyposażona jest w kamerę RGB, sensor IR oraz kamerę stereowizyjną o bazie 5 cm, co pozwala na dokładny pomiar głebi między 0.3 m i 3.0 m oraz maksymalny (deklarowany przez producenta) zasięg 10 metrów.</p>
+<h2 id="dane">Dane</h2>
+<p>Pobierz <a href="https://drive.google.com/file/d/1gBp0ZCnhK-OLjZslQRCExyOrkZKY81Jm/view?usp=sharing">paczkę</a> ze skryptami do zadań.</p>
+<h2 id="zadanie-wstępne">Zadanie wstępne</h2>
+<p>Uruchom skrypt <code>scripts/01_opencv_pointcloud_viewer.py</code> by zwizualizować chmurę punktów z kamery. Sprawdź jak zmienia się chmura punktów korzystając z klawiszy: <code>d</code>, <code>z</code>, <code>c</code>. Spróbuj opisać słownie co ulega zmianie.</p>
+<h2 id="zadania-do-samodzielnej-realizacji">Zadania do samodzielnej realizacji</h2>
+<p><strong>UWAGA</strong> Spróbuj zastąpić klasyczne zagłębianie for w for i interowanie po każdym pikselu poprzez operacje macierzowe. Każdy obraz w pythonie jest macierzą Numpy.</p>
+<ol>
+<li><p>Korzystając ze szkieletu programu <code>scripts/02_background.py</code> przygotuj program, który na podstawie obrazu głębi wyodrębni Twoją posturę z tła i umieści ją na własnym obrazie. Przykładowy efekt działania programu przedstawiono na <a href="https://youtu.be/JQsNVeWgBKU">filmie</a>.<br />
+Zadania szczegółowe:</p>
+<ul>
+<li>wczytaj własny obraz korzystając z biblioteki OpenCV oraz wyrównaj jego rozmiar do wielkości obrazu z kamery głębi (funkcja <code>read_background_image</code>);</li>
+<li>uzupełnij kod w funkcji <code>depth_filter</code> aby redukował odstające wartości w obrazie głębi.<br />
+Sugerowane kroki:
+<ul>
+<li>Pozbądź się niedokładnych pomiarów tła. Zasięg sensora wg dokumentacji wynosi maksymalnie 10 m, jednak dokładność pomiarów znacznie spada powyżej 3 m. W tym celu zastąp wartości głębi większe niż wybrany próg tła (np. &gt;2000) wartością tego progu (np. 2000).</li>
+<li>Pozbądź się brakujących pomiarów tła. Gdy sensor nie odczytał pomiaru w danym regionie lub ten pomiar jest niedokładny, przypisuje on takiemu pomiarowi wartość 0. W tym celu zastąp wartości głębi równe zero przyjętą wartością tła (np. 2000),</li>
+<li>Wygładź pomiary. Pomiary głębi mogą wykazywać pewne delikatne różnice ze względu na dokładność sensora i wprowadzać szum. W tym celu wykorzystaj filtr medianowy by pozbyć się go.</li>
+</ul></li>
+<li>napisz funkcję <code>add_background</code>, która na podstawie obrazu głębi wklei posturę człowieka w wybrane tło.<br />
+Tip 1. Utwórz kopię obrazu tła, by nie nadpisać oryginalnego obrazu.<br />
+Tip 2. Utwórz maskę binarną korzystając z obrazu głębi i odpowiednio ją wykorzystaj na obrazie tła/obrazie RGB z kamery.</li>
+</ul></li>
+<li><p>Korzystając ze szkieletu programu <code>scripts/03_paint.py</code> oraz funkcji <code>depth_filter</code> z poprzedniego zadania przygotuj program, który będzie śledzić najbliższy punkt na obrazie oraz będzie ,,rysował'' punkty gdy wciśnięta będzie spacja. Przykładowy efekt działania programu przedstawiono na <a href="https://youtu.be/rNyKBoy4w18">filmie</a>.<br />
+Zadania szczegółowe:</p>
+<ul>
+<li>przenieś funkcję <code>depth_filter</code> z poprzedniego zadania;</li>
+<li>korzystając z funkcji <a href="https://docs.opencv.org/4.5.2/d2/de8/group__core__array.html#gab473bf2eb6d14ff97e89b355dac20707">cv2.minMaxLoc</a> znajdź współrzędne oraz wartość najbliższego punktu punktu;</li>
+<li>nanieś wskaźnik <code>+</code> (pionowa oraz pozioma linia) na obraz w miejscu najbliższego punktu;</li>
+<li>w pobliżu wskaźnika <code>+</code> nanieś w formie tekstu wartość głębi w tym punkcie;</li>
+<li>napisz kod, który pozwoli rysować czerowne koła o promieniu 5 gdy wciśnięta była spacja (lub spacja może przełączać tryb rysowania).<br />
+Tip. Możesz utworzyć poza pętlą pustą maskę wypełnioną zerami (<a href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html">np.zeros</a>), na której rysujesz koła o wartości 255. Następnie wykorzystaj ją do naniesienia koloru na obraz RGB z kamery.</li>
+</ul></li>
+</ol>
+<h2 id="zadania-dodatkowe">Zadania dodatkowe</h2>
+<ol>
+<li><p>Napisz program, który uruchomi alarm (np. komunikat na obrazie), gdy w wybranym obszarze obiekty znajdują się za blisko (lub/i za daleko) kamery.</p></li>
+<li><p>Napisz program, który będzie szukał 2 najbliższych kamerze punktów (np. dwóch palców) i uruchomi alarm gdy zbliżą się za bardzo do siebie.</p></li>
+</ol>
+</main>
+</body>
+</html>

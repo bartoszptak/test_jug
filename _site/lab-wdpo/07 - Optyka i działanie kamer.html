@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>07 - Optyka i działanie kamer</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="_static/github-markdown.css" />
+  <link rel="stylesheet" href="_static/custom.css" />
+  <link rel="icon" type="image/x-icon" href="_static/favicon.ico" />
+  <script>
+  MathJax = {
+      tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+      fontCache: 'global'
+      }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<main class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">07 - Optyka i działanie kamer</h1>
+</header>
+<h1 id="wprowadzenie-do-przetwarzania-obrazów">Wprowadzenie do przetwarzania obrazów</h1>
+<h2 id="politechnika-poznańska-instytut-robotyki-i-inteligencji-maszynowej">Politechnika Poznańska, Instytut Robotyki i Inteligencji Maszynowej</h2>
+<p align="center">
+  <img width="180" height="180" src="_static/logo.svg">
+</p>
+
+<h2 id="ćwiczenie-laboratoryjne-7-optyka-kamery-oraz-jej-kalibracja"><strong>Ćwiczenie laboratoryjne 7: optyka kamery oraz jej kalibracja</strong></h2>
+<p><a href="/lab-wdpo">Powrót do spisu treści ćwiczeń laboratoryjnych</a></p>
+<h1 id="wstęp">Wstęp</h1>
+<p>Podczas tego laboratorium poznasz fizyczne i optyczne cechy kamery USB. Dowiesz się, jak zmiana obiektywu wpływa na kąty widzenia kamery i jej ogniskową oraz jak manipulacja przesłoną wpływa na głębie ostrości i szybkość akwizycji obrazu. W kolejnym podrozdziale przeprowadzisz kalibrację kamery.</p>
+<h1 id="dane">Dane</h1>
+<p>Pobierz <a href="https://drive.google.com/file/d/1uEUc-J9ei-6YFhKdiiP-PLO97OSETmR3/view?usp=sharing">paczkę</a> ze skryptami do zadań.</p>
+<h1 id="obiektywy">Obiektywy</h1>
+<p align="center">
+  <img width="400" height="160" src="./_07 - Optyka i działanie kamer_readme_files/focal.jpg"><br>
+  <i>Źródło: <a href="https://www.zabezpieczenia.com.pl/telewizja-dozorowa/obiektywy-w-systemach-telewizji-dozorowej-dob%C3%B3r-obiektywu-podstawowe-poj%C4%99cia" >Obiektywy w systemach telewizji dozorowej.</a></i>
+</p>
+
+<p>Zbadaj jak zmienia się obraz kamery przy zmianie ogniskowej jej obiektywu. Odpowiedz na pytania:</p>
+<ul>
+<li>Jaką charakterystykę obrazu tracimy zwiększając ogniskową soczewki a jaką zyskujemy?</li>
+<li>W jakich sytuacjach korzystne jest posiadanie bardzo szerokiego kąta widzenia?</li>
+</ul>
+<h1 id="przysłona">Przysłona</h1>
+<p>Przysłona ma za zadanie ograniczać ilość światła wpadającego do obiektywu, a tym samym zapobiegać „prześwietlaniu” powstającego w kamerze obrazu. Regulując przesłonę, kontrolujemy ilość światła przechodzącego przez soczewki obiektywu. Jednocześnie wpływamy na głębie ostrości otrzymanego obrazu, ponieważ wyższa wartość przesłony powoduje wyższą głębię ostrości.</p>
+<p><strong>Zadanie</strong><br />
+Uruchom skrypt <code>scripts/shutter.py</code>. Korzystając z pokrętła zmiany przesłony na kamerze (pierścień bez śruby), ustaw odpowiednią ilość wpadającego światła. Sprawdź, jak wpływa na obraz dodatkowe oświetlenie (możesz wykorzystać latarkę w telefonie), a jak jego niedobór.</p>
+<p>Następnie zminiejszaj delikatnie rozwarcie soczewki i jednocześnie obserwuj liczbę klatek na sekundę. Zastanów się, skąd może wynikać taka zmiana?</p>
+<h1 id="kalibracja-kamery">Kalibracja kamery</h1>
+<p>Rejestratory obrazu mogą posiadać wady i niedoskonałości fabryczne, które sprawiają, że obraz jest zniekształcony. Najczęściej widocznym zniekształceniem jest efekt rybiego oka, który sprawia, że linie proste nie leżą w jednej linii. Efekt ten można zredukować, znajdując parametry wewnętrzne kamery, co nazywamy kalibracją.</p>
+<p>Aby skutecznie przeprowadzić kalibrację kamery, potrzebny jest obiekt o znanych kształtach i rozmiarach. Najczęściej jest to jednak tablica z naniesioną szachownicą. W naszym przypadku jest to szachownica 8x5, gdyż liczymy wewnętrzne narożniki.</p>
+<p>Znany wzorzec jest wielokrotnie rejestrowany, z możliwie różnych kątów oraz pozycji kamery, zwłaszcza na skrajnych częściach obrazu. Pozwoli to zróżnicować dane i dobrać najlepsze dopasowanie.</p>
+<h3 id="jak-liczyć-wielkość-macierzy-kalibracyjnej">Jak liczyć wielkość macierzy kalibracyjnej?</h3>
+<p align="center">
+  <img width="300" height="200" src="./_07 - Optyka i działanie kamer_readme_files/chess.png">
+  <img width="300" height="200" src="./_07 - Optyka i działanie kamer_readme_files/circle.png">
+</p> 
+
+<ul>
+<li><p>W przypadku tarczy kalibracyjnej typu szachownica, liczbę kolumn i wierszy wyznacza się licząc miejsca styczne narożników czarnych kwadratów. W naszym przypadku jest to 8x5.</p></li>
+<li><p>W przypadku tarczy kalibracyjnej typu koło, jest to delikatnie bardziej skomplikowane. Liczbę kolumn wyznacza się licząc liczbę kół w pierwszych dwóch rzędach. Natomiast w przypadku wierszy, bierzemy pod uwagę tylko liczbę kół w jednej kolumnie. W naszym przypadku jest to 9x3.</p></li>
+</ul>
+<p><strong>Zadanie</strong><br />
+Wykorzystaj skrypt <code>scripts/calibration/1_collect_images.py</code> do zebrania zbioru kalibracyjnego. Program został tak napisany, żeby po wciśnięciu klawisza <code>spacja</code>, zapisać obecną klatkę do katalogu <code>frames</code>. Zbierz między 40 a 80 zdjęć, postaraj się, by były one zróżnicowane i ostre. Klawisz <code>q</code> pozwoli zakończyń program.</p>
+<p>Uruchom skypt <code>scripts/calibration/2_find_chessboard.py</code>. Wyszuka on na każdym obrazie punkty charakterystyczne szachownicy oraz zwizualizuje. Następnie rozpocząnie się kalibracja (może potrwać to kilka minut przy większej liczbie zdjęć). Po prawidłowej kalibracji algorytm wypisze w terminalu parametry wewnętrzne kamery. Zachowaj je.</p>
+<p><strong>Uwaga:</strong> Optyka kamery powinna pozostać niezmieniona w trakcie zbierania zdjęć oraz po przeprowadzeniu procesu kalibracji. Każdorazowa zmiana parametrów wymaga zebrania nowego zestawu zdjęć oraz wykonania ponownej kalibracji.</p>
+<p>Uzupełnij w skrypcie <code>scripts/calibration/3_show_calibrated_camera.py</code> słownik <code>cfg</code> korzystając z obliczonych parametrów wewnętrznych kamery. Uruchom skypt i korzystając z klawisza <code>spacja</code> zmień tryby wyświetlania. Czy obraz został w widoczny sposób poprawiony? Sprawdź czy zmiana głębi oraz zoomu w kamerze wymaga jej ponownej kalibracji.</p>
+<p>Efekt przedstawiono na <a href="https://youtu.be/2o54tjp2CsI">filmie</a>.</p>
+<h1 id="obraz-pseudo-3d">Obraz pseudo-3D</h1>
+<p>Kalibracja kamery pozwala na wykorzystanie narzędzi wprowadzających pseudo obraz 3D, który jest podstawą <a href="https://pl.wikipedia.org/wiki/Rzeczywisto%C5%9B%C4%87_rozszerzona">rozszerzonej rzeczywistości</a> (ang. augmented reality, AR). Prostym narzędziem wykorzystywanym w robotyce są kody aruco, do których są wbudowane w opencv metody ich detekcji, lokalizacji oraz deskrypcji. Przykładowe zastosowania przedstawiono <a href="https://youtu.be/1LBx5vZR_EY?t=62">tutaj</a>, <a href="https://www.youtube.com/watch?v=KFcEEJFK3IQ">tutaj</a>, <a href="https://www.youtube.com/watch?v=yhc8r4Ml8Wc">tutaj</a> i <a href="https://www.youtube.com/watch?v=v5a7pKSOJd8">tutaj</a>.</p>
+<p align="center">
+  <img width="300" height="240" src="./_07 - Optyka i działanie kamer_readme_files/aruco.png">
+</p>
+
+<p><strong>Zadanie</strong><br />
+Upewnij się, że w swoim środowisku masz zainstalowaną bibliotekę <code>opencv-contrib-python</code>.</p>
+<p>Wykorzystaj skrypt <code>aruco_ar.py</code> by wyświetlić modele sześcianów nałożonych na kody aruco. Twoim zadaniem jest wykorzystać informację o id wykrytego znacznika <code>aruco_id</code> oraz pokolorować boxa na różne kolory <code>aruco_color</code>.</p>
+<p><strong>Opcjonalnie</strong><br />
+Pobierz na telefon plik pdf (lub kilka) z kodem Aruco i sprawdź ich działanie. Zastanów się, jakie widzisz zastosowanie w robotyce a jakie w automatyce? Przykładowy rezultat przedstawiono na <a href="https://youtu.be/O2XNT1NWBes">filmie</a>.</p>
+<ul>
+<li><a href="https://drive.google.com/file/d/160u093kqC-C5ztrhJ5hTKbRB78Kvsw6t/view?usp=sharing">pdf z Aruco tagiem o id-0</a></li>
+<li><a href="https://drive.google.com/file/d/17zP4xwCTI-i74eW4zkrvGguh4BOi9_7b/view?usp=sharing">pdf z Aruco tagiem o id-1</a></li>
+<li><a href="https://drive.google.com/file/d/1zsmYylXyzzQiotQn-QQqco2AJqqEzVNV/view?usp=sharing">pdf z Aruco tagiem o id-2</a></li>
+<li><a href="https://drive.google.com/file/d/1qvdTQCtgZG0gs5_NOIIjz7U_pqIQsCQN/view?usp=sharing">pdf z Aruco tagiem o id-3</a></li>
+</ul>
+<h1 id="sklejanie-obrazów-panorama">Sklejanie obrazów (panorama)</h1>
+<p>W opencv został zaimplementowany algorytm, który pozwala na dopasowanie wielu obrazów do siebie. Jest to klasa <code>cv2.Stitcher_create</code>, która wykonuje dla zdjęć następujące kroki:</p>
+<ul>
+<li>wykrywa punkty charakterystyczne na obrazie i używa deskryptorów do ich opsu,</li>
+<li>dopasowuje te punkty między obrazami na podstawie podobieństwa,</li>
+<li>wykorzystuje dopasowane punkty oraz algorytm RANSAC do wyliczania macierzy przekształceń dla obrazów, by móc je dopasować do siebie</li>
+<li>wykonuje sklejenie obrazów na podstawie macierzy przekształceń.</li>
+</ul>
+<p>Więcej informacji o tym mechaniźmie można znaleźć w <a href="https://www.pyimagesearch.com/2018/12/17/image-stitching-with-opencv-and-python/">tym artykule</a>.</p>
+<p align="center">
+  <img width="600" height="240" src="./_07 - Optyka i działanie kamer_readme_files/stitched.jpg">
+</p>
+
+<p><strong>Zadanie</strong><br />
+Korzystając ze skrytpu <code>image_stitching.py</code>, zbierz pokrywajce się częściowo zdjęcia (przy użyciu klawisza spacji), a następnie wciśnij klawisz <code>c</code>, który rozpoczyna proces generowania panoramy. Zwróć uwagę na dokładoność łączenia na krawędziach. <strong>Uwaga:</strong> Zadanie dopasowywania cech jest bardzo zasobożerne, więc może długo trwać jeśli zostało wykonane wiele zdjęć.</p>
+</main>
+</body>
+</html>

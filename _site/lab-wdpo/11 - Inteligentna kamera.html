@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>11 - Inteligentna kamera</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="_static/github-markdown.css" />
+  <link rel="stylesheet" href="_static/custom.css" />
+  <link rel="icon" type="image/x-icon" href="_static/favicon.ico" />
+  <script>
+  MathJax = {
+      tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+      fontCache: 'global'
+      }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<main class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">11 - Inteligentna kamera</h1>
+</header>
+<h1 id="wprowadzenie-do-przetwarzania-obrazów">Wprowadzenie do przetwarzania obrazów</h1>
+<h2 id="politechnika-poznańska-instytut-robotyki-i-inteligencji-maszynowej">Politechnika Poznańska, Instytut Robotyki i Inteligencji Maszynowej</h2>
+<p align="center">
+  <img width="180" height="180" src="_static/logo.svg">
+</p>
+
+<h2 id="ćwiczenie-laboratoryjne-11-inteligentna-kamera"><strong>Ćwiczenie laboratoryjne 11: inteligentna kamera</strong></h2>
+<p><a href="/lab-wdpo">Powrót do spisu treści ćwiczeń laboratoryjnych</a></p>
+<h2 id="wstęp">Wstęp</h2>
+<p>Wraz z rozwojem konwolucyjnych sieci neuronowych i głębokiego uczenia maszynowego, zaczęło powstawać wiele urządzeń, które pozwalają przyspieszać wnioskowanie takich sieci. Urządzenia te cechują się najczęściej bardzo dobrym stosunkiem wydajności do poboru energii. Niektóre urządzenia przyjmują postać pendrive jak <a href="https://software.intel.com/content/www/us/en/develop/hardware/neural-compute-stick.html">Intel NCS 2</a>, a niektóre niewielkich dysków przenośnych jak <a href="https://coral.ai/products/accelerator/">Google Coral</a>. Powstają obecnie również produkty, które nie tylko przyspieszają wnioskowanie, ale potrafią równocześnie rejestrować obraz.</p>
+<p align="center">
+  <img width="200" height="200" src="https://cdn.shopify.com/s/files/1/0494/8020/4455/products/DIMAGE7_1100x.jpg?v=1603720709">
+</p>
+
+<p>Przykładem takiego produktu jest kamera <a href="https://store.opencv.ai/products/oak-1">OpenCV AI Kit: OAK—1</a>, która potrafi nagrywać wideo w 4k@30fps i wyposażona jest w zintegrowane jednostki przetwarzające obraz <a href="https://www.intel.pl/content/www/pl/pl/products/details/processors/movidius-vpu/movidius-myriad-x.html">Intel Myriad X</a>. Podczas tego laboratorium, zostanie ona wykorzystana do zbudowania rzeczywistej aplikacji systemu wizyjnego.</p>
+<h2 id="dane">Dane</h2>
+<p>Pobierz <a href="https://drive.google.com/file/d/1uYSbLRiChTYhnSNZ_l3jRVNkRBiKADeo/view?usp=sharing">paczkę</a> ze skryptami do zadań.</p>
+<h2 id="informacja-o-środowisku-wirtualnym">Informacja o środowisku wirtualnym</h2>
+<p><strong>UWAGA</strong> Ta instrukcja wymaga systemu operacyjnego Ubuntu oraz zainstalowanych dodatkowych bibliotek. Tworząc nowy projekt w IDE PyCharm, wykorzystaj poprzednio skonfigurowane środowisko <code>virtualenv</code>. Ścieżka do interpretera Python to <code>/home/put/.virtualenvs/opencvai/bin/python</code>.</p>
+<h2 id="zadanie-wstępne">Zadanie wstępne</h2>
+<p>Wykorzystując klasyfikator z zajęć o sieciach neuronowych (instrukcja C), przygotuj odpowiednio model do wykorzystania jednostki wnioskującej w kamerze i uruchom aplikację wizualizującą.</p>
+<p>Kroki:</p>
+<ol>
+<li><p>Zmodyfikuj skrypt <code>00_convert_onnx_to_blob.py</code> ustawiając ścieżkę do swojego modelu. Zwróć uwagę na nazwę pliku. Postaraj się zachować oryginalne nazewnictwo <code>clf_resnet18.onnx</code>.</p></li>
+<li><p>Uruchom skrypt. Jeśli wszystko się powiodło, w terminalu powinna pojawić się wiadomość:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="ex">Downloading</span> ../data/clf_resnet18_openvino_2021.4_5shave.blob...</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="ex">Success</span>! Success! Model path: .../clf_resnet18_openvino_2021.4_5shave.blob</span></code></pre></div></li>
+<li><p>Zmodyfikuj w programie <code>scripts/01_own_classifier_infer.py</code> zmienną <code>labels</code> ustawiając własne etykiety klas.</p></li>
+<li><p>Uruchom program i zweryfikuj jego działanie korzystając z inteligentnej kamery. Przykładowe, docelowe działanie programu przedstawiono na <a href="https://youtu.be/NbZTLK_vNE4">filmie</a>.</p></li>
+</ol>
+<h2 id="zadania-do-samodzielnej-realizacji">Zadania do samodzielnej realizacji</h2>
+<ol>
+<li>Uruchom skrypt <code>scripts/gesture_recogniotion/main.py</code> i zweryfikuj działanie programu.</li>
+<li>Twoim zadaniem jest sterowanie wirtualnym pojazdem z wykorzystaniem gestów dłoni. Dlatego zmodyfikuj funkcję <code>recognize_gesture</code> ze skryptu <code>scripts/gesture_recogniotion/Gesture.py</code> w taki sposób, żeby na podstawie gestu (odpowiedniego ułożenia palców dłoni) wykonywać jedną z 4 akcji:
+<ul>
+<li><code>PASS</code> (dłoń otwarta),</li>
+<li><code>ACTION</code> (pięść zaciśnięta),</li>
+<li><code>LEFT</code> (otwarty tylko palec wskazujący),</li>
+<li><code>RIGHT</code> (otwarte dwa palce, tzw. Victoria).</li>
+</ul></li>
+</ol>
+<p><strong>UWAGA</strong> Wykorzystaj do tego informację o zgiętych palcach. Zbuduj odpowiednie instrukcje warunkowe, które do zmiennej <code>r.gesture</code> przypiszą odpowiednią akcję.<br />
+Przykładowe działanie programu przedstawiono na <a href="https://youtu.be/UT5tHhXX3KY">filmie</a>.</p>
+<h2 id="zadania-dodatkowe">Zadania dodatkowe</h2>
+<p>Zapoznaj się z innymi, przykładowymi programami stworzonymi do inteligentnej kamery przez programistów <a href="https://docs.luxonis.com/en/latest/">depthai</a>. Może któreś zastosowanie cię zainteresowało? Sprawdź demo!</p>
+</main>
+</body>
+</html>
