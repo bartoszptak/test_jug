@@ -31,12 +31,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pandoc
         run: sudo apt update && sudo apt install -y pandoc git
+      - name: Mkdir for Pages
+        run: mkdir -p ./_site
       - name: Clone Pages
-        run: git clone https://github.com/PUT-JUG/lab-wdpo.git
-      - name: Compile Pages
-        run: | 
-          mkdir ./_site
-          cd ./lab-wdpo/ && python3 compile.py && cp -rf ./public/* ../_site/ && cd ../
+        run: python run_over_repositories.py
       - name: Upload artifact
         # Automatically uploads an artifact from the './_site' directory by default
         uses: actions/upload-pages-artifact@v3
